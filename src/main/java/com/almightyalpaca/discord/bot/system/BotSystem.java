@@ -13,20 +13,25 @@ import com.almightyalpaca.discord.bot.system.util.GCUtil;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-public class BotFramework {
+public class BotSystem {
 
-	private final ExtensionManager pm;
+	private final ExtensionManager extensionManager;
 
-	public BotFramework() throws JsonIOException, JsonSyntaxException, WrongTypeException, KeyNotFoundException, FileNotFoundException, IOException, InterruptedException, LoginException,
+	public BotSystem() throws JsonIOException, JsonSyntaxException, WrongTypeException, KeyNotFoundException, FileNotFoundException, IOException, InterruptedException, LoginException,
 			IllegalArgumentException {
 
-		this.pm = new ExtensionManager();
+		this.extensionManager = new ExtensionManager();
 
-		this.pm.loadPlugins(new File("plugins"));
+		this.extensionManager.loadPlugins(new File("plugins"));
 
-		this.pm.saveConfig();
+		this.extensionManager.saveConfig();
 
-		GCUtil.fixedRate(30);
+		GCUtil.fixedRate(60);
 
 	}
+
+	public ExtensionManager getExtensionManager() {
+		return extensionManager;
+	}
+
 }
