@@ -27,7 +27,7 @@ dependencies {
 
 task exportDependencies(type: Copy, overwrite: true) {
 	dependsOn build
-	File directory = new File(projectDir.getParentFile(), "export/lib/")
+	File directory = new File(projectDir.parentFile, "export/lib/")
 	directory.mkdirs()
 	into directory
 	from (configurations.runtime - project(":JDA").configurations.runtime)
@@ -35,9 +35,9 @@ task exportDependencies(type: Copy, overwrite: true) {
 
 task export (type: Copy, overwrite: true) {
 	dependsOn build, exportDependencies 
-	File directory = new File(projectDir.getParentFile(), "export/")
+	File directory = new File(projectDir.parentFile, "export/")
 	into directory
-	from (project.jar.outputs.files.getFiles()) {
+	from (project.jar.outputs.files.files) {
 		rename {"Bot System.jar"}
 	}
 }
