@@ -15,11 +15,11 @@ public class PluginInfo {
 		 * 
 		 * @note It does not work if "1.10" is supposed to be equal to "1.10.0".
 		 * @param v1
-		 *            first version to compare.
+		 *			first version to compare.
 		 * @param v2
-		 *            second version to compare.
+		 *			second version to compare.
 		 * @return The result is a negative integer if v1 is _numerically_ less than v2. The result is a positive integer if v1 is _numerically_ greater than v2. The result is zero if the strings are
-		 *         _numerically_ equal.
+		 *		 _numerically_ equal.
 		 * @author Alex Gitelman (stackoverflow.com)
 		 */
 		public static int compare(final Version v1, final Version v2) {
@@ -65,11 +65,11 @@ public class PluginInfo {
 
 	/**
 	 * @param author
-	 *            the author's name
+	 *			the author's name
 	 * @param name
-	 *            the plugin's name
+	 *			the plugin's name
 	 * @param description
-	 *            the plugin's description
+	 *			the plugin's description
 	 */
 	public PluginInfo(final String id, final PluginInfo.Version version, final String author, final String name, final String description) {
 		this.id = id;

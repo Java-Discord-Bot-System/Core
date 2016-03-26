@@ -1,3 +1,7 @@
+apply plugin: 'application'
+
+mainClassName = "com.almightyalpaca.discord.bot.system.Main"
+
 dependencies {
 	// JDA
 	compile project(":JDA") 
@@ -19,4 +23,21 @@ dependencies {
 	compile 'org.jsoup:jsoup:1.8.3'
 
 	testCompile 'junit:junit:4.12'
+}
+
+task exportDependencies(type: Copy, overwrite: true) {
+	dependsOn build
+	File directory = new File(projectDir.getParentFile(), "export/lib/")
+	directory.mkdirs()
+	into directory
+	from (configurations.runtime - project(":JDA").configurations.runtime)
+}
+
+task export (type: Copy, overwrite: true) {
+	dependsOn build, exportDependencies 
+	File directory = new File(projectDir.getParentFile(), "export/")
+	into directory
+	from (project.jar.outputs.files.getFiles()) {
+		rename {"Bot System.jar"}
+	}
 }
