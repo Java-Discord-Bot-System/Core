@@ -29,13 +29,10 @@ public class CommandExtensionManager {
 	public CommandExtensionManager(final ExtensionManager manager) {
 		this.manager = manager;
 		this.commands = new HashMap<>();
-		this.executor = new ThreadPoolExecutor(1, 10, 1L, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>(), new ThreadFactory() {
-			@Override
-			public Thread newThread(final Runnable r) {
-				final Thread thread = new Thread(r, "CommandExecution-Thread");
-				thread.setPriority(Thread.NORM_PRIORITY + 1);
-				return thread;
-			}
+		this.executor = new ThreadPoolExecutor(1, 10, 1L, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>(), (ThreadFactory) r -> {
+			final Thread thread = new Thread(r, "CommandExecution-Thread");
+			thread.setPriority(Thread.NORM_PRIORITY + 1);
+			return thread;
 		});
 	}
 
@@ -46,14 +43,11 @@ public class CommandExtensionManager {
 	}
 
 	public void executeCommand(final ICommand command, final Method method, final Object[] args) {
-		this.executor.submit(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					method.invoke(command, args);
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					e.printStackTrace();
-				}
+		this.executor.submit(() -> {
+			try {
+				method.invoke(command, args);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
 			}
 		});
 	}

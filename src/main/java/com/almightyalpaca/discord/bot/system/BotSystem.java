@@ -31,7 +31,7 @@ public class BotSystem {
 	}
 
 	public ExtensionManager getExtensionManager() {
-		return extensionManager;
+		return this.extensionManager;
 	}
 
 }

@@ -157,7 +157,7 @@ public class ExtensionManager {
 
 	public void loadPlugins(final File pluginsFolder) {
 
-		if ((pluginsFolder == null) || !pluginsFolder.exists() || !pluginsFolder.isDirectory()) {
+		if (pluginsFolder == null || !pluginsFolder.exists() || !pluginsFolder.isDirectory()) {
 			throw new IllegalArgumentException("Invalid folder");
 		}
 
@@ -179,16 +179,12 @@ public class ExtensionManager {
 		this.unloadPlugins();
 		this.commandManager.shutdown();
 		this.api.shutdown();
+		this.eventManager.shutdown();
 		URLUtils.shutdown();
 	}
 
 	public void unloadPlugin(final Class<? extends Plugin> clazz) {
-		this.unloadPlugins(new PluginSelector() {
-			@Override
-			public boolean match(final PluginExtension o) {
-				return o.getPluginObject().getClass().equals(clazz);
-			}
-		});
+		this.unloadPlugins(o -> o.getPluginObject().getClass().equals(clazz));
 	}
 
 	public void unloadPlugin(final PluginExtension pluginExtension) {

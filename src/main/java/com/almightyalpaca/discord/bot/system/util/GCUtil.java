@@ -48,6 +48,6 @@ public class GCUtil {
 	}
 
 	public static void shutdown() {
-		gcThread.interrupt();
+		GCUtil.gcThread.interrupt();
 	}
 }

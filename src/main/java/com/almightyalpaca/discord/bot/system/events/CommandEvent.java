@@ -75,9 +75,9 @@ public class CommandEvent extends ExtensionEvent {
 	 * Consider {@link #sendFileAsync(java.io.File, java.util.function.Consumer) sendFileAsync(File, Consumer)} for an alternative.
 	 *
 	 * @param file
-	 *			The file to upload to the {@link net.dv8tion.jda.entities.TextChannel TextChannel}.
+	 *            The file to upload to the {@link net.dv8tion.jda.entities.TextChannel TextChannel}.
 	 * @param message
-	 *			The message to be sent along with the uploaded file. This value can be <code>null</code>.
+	 *            The message to be sent along with the uploaded file. This value can be <code>null</code>.
 	 * @return The {@link net.dv8tion.jda.entities.Message Message} created from this upload.
 	 */
 	public final Message sendFile(final File file, final Message message) {
@@ -90,11 +90,11 @@ public class CommandEvent extends ExtensionEvent {
 	 * If you do not wish to send a Message with the uploaded file, you can provide <code>null</code> for the <code>message</code> parameter.
 	 *
 	 * @param file
-	 *			The file to upload to the {@link net.dv8tion.jda.entities.TextChannel TextChannel}.
+	 *            The file to upload to the {@link net.dv8tion.jda.entities.TextChannel TextChannel}.
 	 * @param message
-	 *			The message to be sent along with the uploaded file. This value can be <code>null</code>.
+	 *            The message to be sent along with the uploaded file. This value can be <code>null</code>.
 	 * @param callback
-	 *			Function to deal with the returned {@link net.dv8tion.jda.entities.Message Message} after asynchronous uploading completes.
+	 *            Function to deal with the returned {@link net.dv8tion.jda.entities.Message Message} after asynchronous uploading completes.
 	 */
 	public final void sendFileAsync(final File file, final Message message, final Consumer<Message> callback) {
 		this.receivedEvent.getChannel().sendFileAsync(file, message, callback);
@@ -107,10 +107,10 @@ public class CommandEvent extends ExtensionEvent {
 	 * {@link net.dv8tion.jda.exceptions.RateLimitedException RateLimitedException} is thrown
 	 *
 	 * @param msg
-	 *			the {@link net.dv8tion.jda.entities.Message Message} to send
+	 *            the {@link net.dv8tion.jda.entities.Message Message} to send
 	 * @return The created {@link net.dv8tion.jda.entities.Message Message} object or null if it failed
 	 * @throws net.dv8tion.jda.exceptions.RateLimitedException
-	 *			 when rate-imit is reached
+	 *             when rate-imit is reached
 	 */
 	public final Message sendMessage(final Message msg) {
 		return this.receivedEvent.getChannel().sendMessage(msg);
@@ -130,10 +130,10 @@ public class CommandEvent extends ExtensionEvent {
 	 * failed. When the Rate-limit is reached (5 Messages in 5 secs), a {@link net.dv8tion.jda.exceptions.RateLimitedException RateLimitedException} is thrown
 	 *
 	 * @param text
-	 *			the text to send
+	 *            the text to send
 	 * @return the Message created by this function
 	 * @throws net.dv8tion.jda.exceptions.RateLimitedException
-	 *			 when rate-imit is reached
+	 *             when rate-imit is reached
 	 */
 	public final Message sendMessage(final String text) {
 		return this.receivedEvent.getChannel().sendMessage(text);
@@ -145,9 +145,9 @@ public class CommandEvent extends ExtensionEvent {
 	 * is not modified! This method will wait, and send later, if a Rate-Limit occurs.
 	 *
 	 * @param msg
-	 *			the {@link net.dv8tion.jda.entities.Message Message} to send
+	 *            the {@link net.dv8tion.jda.entities.Message Message} to send
 	 * @param callback
-	 *			the Callback-function that is called upon successful sending
+	 *            the Callback-function that is called upon successful sending
 	 */
 	public final void sendMessageAsync(final Message msg, final Consumer<Message> callback) {
 		this.receivedEvent.getChannel().sendMessageAsync(msg, callback);
@@ -158,9 +158,9 @@ public class CommandEvent extends ExtensionEvent {
 	 * is passed to the callback-function This method will wait, and send later, if a Rate-Limit occurs.
 	 *
 	 * @param msg
-	 *			the text to send
+	 *            the text to send
 	 * @param callback
-	 *			the Callback-function that is called upon successful sending
+	 *            the Callback-function that is called upon successful sending
 	 */
 	public final void sendMessageAsync(final String msg, final Consumer<Message> callback) {
 		this.receivedEvent.getChannel().sendMessageAsync(msg, callback);

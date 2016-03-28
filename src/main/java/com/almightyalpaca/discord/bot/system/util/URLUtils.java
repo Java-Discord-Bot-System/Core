@@ -9,8 +9,6 @@ import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import com.almightyalpaca.discord.bot.system.util.URLUtils;
-
 public class URLUtils {
 
 	private static CloseableHttpClient client = HttpClientBuilder.create().disableRedirectHandling().build();
@@ -36,7 +34,7 @@ public class URLUtils {
 				return url;
 			}
 			final Header[] headers = httpResponse.getHeaders(HttpHeaders.LOCATION);
-			if (headers.length != 1){
+			if (headers.length != 1) {
 				throw new IllegalStateException();
 			}
 			final String newUrl = headers[0].getValue();

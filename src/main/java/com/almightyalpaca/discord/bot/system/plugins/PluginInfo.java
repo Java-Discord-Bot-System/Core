@@ -15,11 +15,11 @@ public class PluginInfo {
 		 * 
 		 * @note It does not work if "1.10" is supposed to be equal to "1.10.0".
 		 * @param v1
-		 *			first version to compare.
+		 *            first version to compare.
 		 * @param v2
-		 *			second version to compare.
+		 *            second version to compare.
 		 * @return The result is a negative integer if v1 is _numerically_ less than v2. The result is a positive integer if v1 is _numerically_ greater than v2. The result is zero if the strings are
-		 *		 _numerically_ equal.
+		 *         _numerically_ equal.
 		 * @author Alex Gitelman (stackoverflow.com)
 		 */
 		public static int compare(final Version v1, final Version v2) {
@@ -27,11 +27,11 @@ public class PluginInfo {
 			final String[] vals2 = v2.number.split("\\.");
 			int i = 0;
 			// set index to first non-equal ordinal or length of shortest version string
-			while ((i < vals1.length) && (i < vals2.length) && vals1[i].equals(vals2[i])) {
+			while (i < vals1.length && i < vals2.length && vals1[i].equals(vals2[i])) {
 				i++;
 			}
 			// compare first non-equal ordinal number
-			if ((i < vals1.length) && (i < vals2.length)) {
+			if (i < vals1.length && i < vals2.length) {
 				final int diff = Integer.valueOf(vals1[i]).compareTo(Integer.valueOf(vals2[i]));
 				return Integer.signum(diff);
 			}
@@ -65,11 +65,11 @@ public class PluginInfo {
 
 	/**
 	 * @param author
-	 *			the author's name
+	 *            the author's name
 	 * @param name
-	 *			the plugin's name
+	 *            the plugin's name
 	 * @param description
-	 *			the plugin's description
+	 *            the plugin's description
 	 */
 	public PluginInfo(final String id, final PluginInfo.Version version, final String author, final String name, final String description) {
 		this.id = id;
@@ -85,7 +85,7 @@ public class PluginInfo {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if ((obj != null) && (obj instanceof PluginInfo)) {
+		if (obj != null && obj instanceof PluginInfo) {
 			final PluginInfo info = (PluginInfo) obj;
 			return this.equals(info);
 		} else {
@@ -99,7 +99,7 @@ public class PluginInfo {
 
 	@Override
 	protected void finalize() throws Throwable {
-		System.out.println("FINALIZING PLUGININFO: " + name);
+		System.out.println("FINALIZING PLUGININFO: " + this.name);
 	}
 
 	public final String getAuthor() {

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import com.almightyalpaca.discord.bot.system.util.StringUtils;
-
 public class StringUtils {
 
 	public static String replaceFirst(final String string, final String target, final String replacement) {

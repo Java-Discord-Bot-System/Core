@@ -3,7 +3,6 @@ package com.almightyalpaca.discord.bot.system.extension;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.ImmutableTriple;
@@ -95,8 +94,8 @@ public class CommandExtension {
 	public void execute(final CommandEvent event) {
 		final List<Triple<Integer, Method, Object[]>> list = new ArrayList<>();
 		for (final CommandMethod commandMethod : this.commandMethods) {
-			if ((event.getMessage().isPrivate() && !commandMethod.method.getAnnotation(Command.class).dm()) || (!event.getMessage().isPrivate() && !commandMethod.method.getAnnotation(Command.class)
-					.guild())) {
+			if (event.getMessage().isPrivate() && !commandMethod.method.getAnnotation(Command.class).dm() || !event.getMessage().isPrivate() && !commandMethod.method.getAnnotation(Command.class)
+					.guild()) {
 				continue;
 			}
 			try {
@@ -106,13 +105,7 @@ public class CommandExtension {
 			}
 		}
 
-		list.sort(new Comparator<Triple<Integer, Method, Object[]>>() {
-
-			@Override
-			public int compare(final Triple<Integer, Method, Object[]> t1, final Triple<Integer, Method, Object[]> t2) {
-				return Integer.compare(t1.getLeft(), t2.getLeft());
-			}
-		});
+		list.sort((t1, t2) -> Integer.compare(t1.getLeft(), t2.getLeft()));
 
 		if (list.isEmpty()) {
 			this.command.unknownSyntax(event);

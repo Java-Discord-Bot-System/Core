@@ -1,7 +1,6 @@
 package com.almightyalpaca.discord.bot.system.command.arguments.parsers;
 
 import java.util.NoSuchElementException;
-import java.util.function.Predicate;
 
 import com.almightyalpaca.discord.bot.system.command.arguments.Arguments;
 import com.almightyalpaca.discord.bot.system.command.arguments.parsers.CommandAgumentParsers.Parser;
@@ -117,12 +116,7 @@ public class JDAParsers {
 			channel = msg.getJDA().getVoiceChannelById(arg.replace("<@", "").replace(">", ""));
 
 			if (channel == null) {
-				msg.getJDA().getTextChannelById(msg.getChannelId()).getGuild().getVoiceChannels().parallelStream().filter(new Predicate<VoiceChannel>() {
-					@Override
-					public boolean test(final VoiceChannel c) {
-						return c.getName().contentEquals(arg);
-					}
-				}).findFirst().get();
+				msg.getJDA().getTextChannelById(msg.getChannelId()).getGuild().getVoiceChannels().parallelStream().filter(c -> c.getName().contentEquals(arg)).findFirst().get();
 			}
 			if (channel == null) {
 				throw new NoSuchElementException();
