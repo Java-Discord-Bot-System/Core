@@ -60,7 +60,7 @@ public class ExtensionManager {
 
 		this.rootConfig = ConfigFactory.getConfig(new File(this.configFolder, "config.json"));
 
-		MessageBuilderSettings.setNodehubPassword(this.rootConfig.getOrPutString("messages.upload.nodehub.password", "Discord Bot"));
+		MessageBuilderSettings.setNotehubPassword(this.rootConfig.getOrPutString("messages.upload.notehub.password", "Discord Bot"));
 
 		this.settingsManager = new SettingsManager(ConfigFactory.getConfig(new File(this.configFolder, "users.json")), ConfigFactory.getConfig(new File(this.configFolder, "guilds.json")));
 

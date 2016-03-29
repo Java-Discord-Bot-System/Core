@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class EmojiUtil {
 	private static final Map<String, String>	toUTF8;
@@ -19,18 +20,18 @@ public class EmojiUtil {
 		final Map<String, String> tempToDiscord = new HashMap<>();
 
 		try {
-			final JSONArray array = new JSONArray(new InputStreamReader(EmojiUtil.class.getResourceAsStream("emojis.json"), "UTF-8"));
+			final JsonArray array = new JsonParser().parse(new InputStreamReader(EmojiUtil.class.getResourceAsStream("emojis.json"), "UTF-8")).getAsJsonArray();
 
-			for (int i = 0; i < array.length(); i++) {
-				final JSONObject object = array.getJSONObject(i);
+			for (int i = 0; i < array.size(); i++) {
+				final JsonObject object = array.get(i).getAsJsonObject();
 
-				final String name = ":" + object.getString("emoji") + ":";
-				final JSONArray utfArray = object.getJSONArray("surrogates");
+				final String name = ":" + object.get("emoji").getAsString() + ":";
+				final JsonArray utfArray = object.get("surrogates").getAsJsonArray();
 
-				tempToUTF8.put(name, utfArray.getString(0));
+				tempToUTF8.put(name, utfArray.get(0).getAsString());
 
-				for (int j = 0; j < utfArray.length(); j++) {
-					final String emoji = utfArray.getString(j);
+				for (int j = 0; j < utfArray.size(); j++) {
+					final String emoji = utfArray.get(j).getAsString();
 					tempToDiscord.put(emoji, name);
 				}
 			}
@@ -45,16 +46,16 @@ public class EmojiUtil {
 		final Map<String, String> tempShortcuts = new HashMap<>();
 
 		try {
-			final JSONArray array = new JSONArray(new InputStreamReader(EmojiUtil.class.getResourceAsStream("shortcuts.json"), "UTF-8"));
+			final JsonArray array = new JsonParser().parse(new InputStreamReader(EmojiUtil.class.getResourceAsStream("shortcuts.json"), "UTF-8")).getAsJsonArray();
 
-			for (int i = 0; i < array.length(); i++) {
-				final JSONObject object = array.getJSONObject(i);
+			for (int i = 0; i < array.size(); i++) {
+				final JsonObject object = array.get(i).getAsJsonObject();
 
-				final String name = ":" + object.getString("emoji") + ":";
-				final JSONArray shortcutsArray = object.getJSONArray("shortcuts");
+				final String name = ":" + object.get("emoji").getAsString() + ":";
+				final JsonArray shortcutsArray = object.get("shortcuts").getAsJsonArray();
 
-				for (int j = 0; j < shortcutsArray.length(); j++) {
-					final String emoji = shortcutsArray.getString(j);
+				for (int j = 0; j < shortcutsArray.size(); j++) {
+					final String emoji = shortcutsArray.get(j).getAsString();
 					tempShortcuts.put(emoji, name);
 				}
 

@@ -4,17 +4,15 @@ mainClassName = "com.almightyalpaca.discord.bot.system.Main"
 
 dependencies {
 	// JDA
-	compile project(":JDA") 
+	compile project(":JDA")
 	//{
 	//	exclude group: 'junit', module: 'junit'
 	//}
 	
 	// Zip4J
 	compile 'net.lingala.zip4j:zip4j:1.3.2'
-	// Gson
-	compile 'com.google.code.gson:gson:2.6.2'
 	// Commons-IO
-	compile 'commons-io:commons-io:2.4'
+	compile 'commons-io:commons-io:2.4' 
 	// JOrbis
 	compile 'com.googlecode.soundlibs:jorbis:0.0.17-2'
 	// Guava
