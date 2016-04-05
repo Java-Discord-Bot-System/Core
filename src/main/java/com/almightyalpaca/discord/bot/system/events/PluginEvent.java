@@ -17,7 +17,7 @@ abstract class PluginEvent extends ExtensionEvent {
 			throw new UnsupportedOperationException("You cannot reuse an event!");
 		}
 		this.fired = true;
-		this.extensionManager.getEventManager().handle(this);
+		ExtensionEvent.getEventManager(this.extensionManager).handle(this);
 
 	}
 

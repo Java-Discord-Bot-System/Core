@@ -8,24 +8,22 @@ import java.util.Set;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 
-import com.almightyalpaca.discord.bot.system.events.EventManager;
-
 import net.dv8tion.jda.hooks.SubscribeEvent;
 
 public class Handler {
 
-	private final EventManager								manager;
+	private final EventManager eventManager;
 
-	private final Object									object;
+	private final Object object;
 
-	private final Set<Triple<Class<?>, Method, Boolean>>	methods;
+	private final Set<Triple<Class<?>, Method, Boolean>> methods;
 
 	/**
 	 * @param object
 	 * @param methods
 	 */
-	public Handler(final EventManager manager, final Object object) {
-		this.manager = manager;
+	public Handler(final EventManager eventManager, final Object object) {
+		this.eventManager = eventManager;
 		this.object = object;
 
 		this.methods = new HashSet<>();
@@ -55,7 +53,7 @@ public class Handler {
 		for (final Triple<Class<?>, Method, Boolean> entry : this.methods) {
 			if (entry.getLeft().isAssignableFrom(event.getClass())) {
 				if (entry.getRight()) {
-					this.manager.executeAsync(this.object, entry.getMiddle(), event);
+					this.eventManager.executeAsync(this.object, entry.getMiddle(), event);
 				} else {
 					try {
 						entry.getMiddle().invoke(this.object, event);

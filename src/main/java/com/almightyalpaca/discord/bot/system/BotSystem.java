@@ -17,8 +17,8 @@ public class BotSystem {
 
 	private final ExtensionManager extensionManager;
 
-	public BotSystem() throws JsonIOException, JsonSyntaxException, WrongTypeException, KeyNotFoundException, FileNotFoundException, IOException, InterruptedException, LoginException,
-			IllegalArgumentException {
+	public BotSystem() throws JsonIOException, JsonSyntaxException, WrongTypeException, KeyNotFoundException, FileNotFoundException, IOException, InterruptedException,
+		LoginException, IllegalArgumentException {
 
 		this.extensionManager = new ExtensionManager();
 

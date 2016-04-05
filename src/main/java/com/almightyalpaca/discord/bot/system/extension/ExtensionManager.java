@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,7 +16,7 @@ import com.almightyalpaca.discord.bot.system.config.Config;
 import com.almightyalpaca.discord.bot.system.config.ConfigFactory;
 import com.almightyalpaca.discord.bot.system.config.exception.KeyNotFoundException;
 import com.almightyalpaca.discord.bot.system.config.exception.WrongTypeException;
-import com.almightyalpaca.discord.bot.system.events.EventManager;
+import com.almightyalpaca.discord.bot.system.events.manager.EventManager;
 import com.almightyalpaca.discord.bot.system.exception.PluginException;
 import com.almightyalpaca.discord.bot.system.exception.PluginLoadingException;
 import com.almightyalpaca.discord.bot.system.plugins.Plugin;
@@ -29,28 +30,26 @@ import com.google.gson.JsonSyntaxException;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
 import net.dv8tion.jda.MessageBuilderSettings;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.User;
 
 public class ExtensionManager {
 
-	public Set<PluginExtension>				plugins;
+	final Set<PluginExtension> plugins;
 
-	private final Config					rootConfig;
-	private final JDA						api;
+	final Config	rootConfig;
+	final JDA		api;
 
-	private final CommandExtensionManager	commandManager;
+	final CommandExtensionManager commandManager;
 
-	private final SettingsManager			settingsManager;
+	final SettingsManager settingsManager;
 
-	private final File						configFolder;
+	final File configFolder;
 
-	private final EventManager				eventManager;
+	final EventManager eventManager;
 
-	final File								cacheFolder;
+	final File cacheFolder;
 
-	public ExtensionManager() throws JsonIOException, JsonSyntaxException, WrongTypeException, KeyNotFoundException, FileNotFoundException, IOException, LoginException, IllegalArgumentException,
-			InterruptedException {
+	public ExtensionManager() throws JsonIOException, JsonSyntaxException, WrongTypeException, KeyNotFoundException, FileNotFoundException, IOException, LoginException,
+		IllegalArgumentException, InterruptedException {
 		this.plugins = new HashSet<>();
 
 		this.cacheFolder = new File("cache");
@@ -62,13 +61,15 @@ public class ExtensionManager {
 
 		MessageBuilderSettings.setNotehubPassword(this.rootConfig.getOrPutString("messages.upload.notehub.password", "Discord Bot"));
 
-		this.settingsManager = new SettingsManager(ConfigFactory.getConfig(new File(this.configFolder, "users.json")), ConfigFactory.getConfig(new File(this.configFolder, "guilds.json")));
+		this.settingsManager = new SettingsManager(ConfigFactory.getConfig(new File(this.configFolder, "users.json")),
+			ConfigFactory.getConfig(new File(this.configFolder, "guilds.json")));
 
 		this.eventManager = new EventManager(this);
 
 		this.commandManager = new CommandExtensionManager(this);
 
-		final JDABuilder builder = new JDABuilder(this.rootConfig.getString("secure.discord.email"), this.rootConfig.getString("secure.discord.password")).setEventManager(this.eventManager);
+		final JDABuilder builder = new JDABuilder(this.rootConfig.getString("secure.discord.email"), this.rootConfig.getString("secure.discord.password"))
+			.setEventManager(this.eventManager);
 
 		if (this.rootConfig.getBoolean("proxy.use")) {
 			builder.setProxy(this.rootConfig.getString("proxy.host"), this.rootConfig.getInt("proxy.port"));
@@ -78,62 +79,25 @@ public class ExtensionManager {
 
 	}
 
-	public JDA getAPI() {
-		return this.api;
-	}
-
-	public final CommandExtensionManager getCommandManager() {
-		return this.commandManager;
-	}
-
-	public Config getConfig(final String string) {
-		return this.rootConfig.getOrCreateConfig(string);
-	}
-
-	public EventManager getEventManager() {
-		return this.eventManager;
-	}
-
-	public Config getGuildConfig(final Guild guild) {
-		return this.getConfig("guilds." + guild.getId());
-	}
-
 	public Config getPluginConfig(final Plugin plugin) {
-		return this.getConfig("plugins." + plugin.getPluginInfo().getId().replace(".", "/"));
+		return this.rootConfig.getOrCreateConfig("plugins." + plugin.getPluginInfo().getName());
 	}
 
-	public Config getPluginConfig(final PluginExtension plugin) {
-		return this.getPluginConfig(plugin.getPluginObject());
+	public final Set<PluginExtension> getPlugins() {
+		return Collections.unmodifiableSet(this.plugins);
 	}
 
 	public String getPrefix() {
-		final String prefix = this.getConfig("commands").getString("prefix");
+		final String prefix = this.rootConfig.getConfig("commands").getString("prefix");
 		if (prefix.equalsIgnoreCase("@mention")) {
 			return this.api.getSelfInfo().getAsMention() + " ";
 		}
 		return prefix;
 	}
 
-	public Config getSecureConfig(final String name, final ExtensionBridge bridge) {
-		System.out.println("WARN: \"" + bridge.getPlugin().getPluginInfo().getName() + "\" Plugin requested access to secure config: " + name);// TODO
-		return this.getConfig("secure." + name);
-	}
-
-	public SettingsManager getSettingsManager() {
-		return this.settingsManager;
-	}
-
-	public Config getUserConfig(final User user) {
-		final String key = "users." + user.getId();
-		if (!this.rootConfig.hasKey(key)) {
-			this.rootConfig.put(key + ".id", user.getId());
-		}
-		return this.getConfig(key);
-	}
-
 	public boolean isLoaded(final PluginInfo info) {
 		for (final PluginExtension plugin : this.plugins) {
-			if (info.equals(plugin.getPluginInfo())) {
+			if (info.equals(plugin.plugin.getPluginInfo())) {
 				return true;
 			}
 		}
@@ -143,7 +107,7 @@ public class ExtensionManager {
 	public void loadPlugin(final File pluginFolder) {
 		try {
 			PluginExtension extension = new PluginExtension(this, pluginFolder);
-			if (!this.isLoaded(extension.getPluginInfo())) {
+			if (!this.isLoaded(extension.plugin.getPluginInfo())) {
 				extension.load();
 				this.plugins.add(extension);
 			} else {
@@ -163,7 +127,8 @@ public class ExtensionManager {
 
 		for (final File pluginDir : pluginsFolder.listFiles()) {
 			if (!pluginDir.isDirectory()) {
-				continue; // Only folders for now, single jar and class files will come later
+				continue; // Only folders for now, single jar and class files
+							// will come later
 			} else {
 				this.loadPlugin(pluginDir);
 			}
@@ -184,7 +149,7 @@ public class ExtensionManager {
 	}
 
 	public void unloadPlugin(final Class<? extends Plugin> clazz) {
-		this.unloadPlugins(o -> o.getPluginObject().getClass().equals(clazz));
+		this.unloadPlugins(o -> o.plugin.getClass().equals(clazz));
 	}
 
 	public void unloadPlugin(final PluginExtension pluginExtension) {

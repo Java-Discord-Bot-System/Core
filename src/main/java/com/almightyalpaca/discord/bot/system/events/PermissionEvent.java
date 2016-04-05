@@ -1,6 +1,6 @@
 package com.almightyalpaca.discord.bot.system.events;
 
-import com.almightyalpaca.discord.bot.system.command.ICommand;
+import com.almightyalpaca.discord.bot.system.command.Command;
 import com.almightyalpaca.discord.bot.system.extension.ExtensionEvent;
 import com.almightyalpaca.discord.bot.system.extension.ExtensionManager;
 import com.almightyalpaca.discord.bot.system.plugins.Plugin;
@@ -13,17 +13,17 @@ import net.dv8tion.jda.entities.User;
 
 public final class PermissionEvent extends PluginEvent {
 
-	private final ICommand		command;
+	private final Command		command;
 	private final CommandEvent	commandEvent;
 	private boolean				result	= true;
 
-	public PermissionEvent(final ExtensionManager manager, final ICommand command, final CommandEvent commandEvent) {
+	public PermissionEvent(final ExtensionManager manager, final Command command, final CommandEvent commandEvent) {
 		super(manager);
 		this.command = command;
 		this.commandEvent = commandEvent;
 	}
 
-	public PermissionEvent(final Plugin plugin, final ICommand command, final CommandEvent commandEvent) {
+	public PermissionEvent(final Plugin plugin, final Command command, final CommandEvent commandEvent) {
 		this(ExtensionEvent.getExtensionManager(plugin), command, commandEvent);
 	}
 
@@ -32,7 +32,7 @@ public final class PermissionEvent extends PluginEvent {
 	}
 
 	public MessageChannel getChannel() {
-		return this.commandEvent.receivedEvent.getChannel();
+		return this.commandEvent.getChannel();
 	}
 
 	public CommandEvent getCommandEvent() {
@@ -40,15 +40,15 @@ public final class PermissionEvent extends PluginEvent {
 	}
 
 	public String getCommandName() {
-		return this.command.getName();
+		return this.command.getInfo().getName();
 	}
 
 	public Guild getGuild() {
-		return this.commandEvent.receivedEvent.getGuild();
+		return this.commandEvent.getGuild();
 	}
 
 	public PrivateChannel getPrivateChannel() {
-		return this.commandEvent.receivedEvent.getPrivateChannel();
+		return this.commandEvent.getPrivateChannel();
 	}
 
 	public boolean getResult() {
@@ -56,7 +56,7 @@ public final class PermissionEvent extends PluginEvent {
 	}
 
 	public TextChannel getTextChannel() {
-		return this.commandEvent.receivedEvent.getTextChannel();
+		return this.commandEvent.getTextChannel();
 	}
 
 	public boolean isPrivate() {

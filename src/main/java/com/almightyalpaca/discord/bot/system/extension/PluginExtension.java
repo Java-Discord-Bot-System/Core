@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import com.almightyalpaca.discord.bot.system.config.Config;
 import com.almightyalpaca.discord.bot.system.exception.InvalidPluginException;
 import com.almightyalpaca.discord.bot.system.exception.PluginInitializingException;
 import com.almightyalpaca.discord.bot.system.exception.PluginLoadingException;
@@ -25,21 +24,22 @@ import net.lingala.zip4j.exception.ZipException;
 
 public class PluginExtension {
 
-	private final File						folder;
-	private final File						jar;
+	final File	folder;
+	final File	jar;
 
-	private final ExtensionClassLoader		loader;
+	final ExtensionClassLoader loader;
 
-	private Plugin							plugin;
+	final Plugin plugin;
 
-	private final ExtensionManager			extensionManager;
-	private final ExtensionBridge			bridge;
-	private final Class<? extends Plugin>	pluginClass;
+	final ExtensionManager			extensionManager;
+	final ExtensionBridge			bridge;
+	final Class<? extends Plugin>	pluginClass;
 
 	@SuppressWarnings("unchecked")
-	public PluginExtension(final ExtensionManager manager, final File folder) throws InvalidPluginException, IOException, PluginInitializingException, PluginLoadingException {
+	public PluginExtension(final ExtensionManager extensionManager, final File folder)
+		throws InvalidPluginException, IOException, PluginInitializingException, PluginLoadingException {
 		System.out.println("Begin initializing plugin: " + folder);
-		this.extensionManager = manager;
+		this.extensionManager = extensionManager;
 		this.folder = folder;
 		final File libs = new File(folder, "lib");
 		libs.mkdirs();
@@ -119,60 +119,23 @@ public class PluginExtension {
 		System.out.println("Finished initializing plugin: " + folder);
 	}
 
-	@Override
-	protected void finalize() throws Throwable {
-		System.out.println("FINALIZING PLUGINOBJECT");
+	public final ExtensionBridge getBridge() {
+		return this.bridge;
 	}
 
-	public final ExtensionClassLoader getClassLoader() {
-		return this.loader;
-	}
-
-	public final File getFolder() {
-		return this.folder;
-	}
-
-	public final File getJarFile() {
-		return this.jar;
-	}
-
-	public final Class<? extends Plugin> getPluginClass() {
-		return this.pluginClass;
-	}
-
-	public final Config getPluginConfig() {
-		return this.plugin.getBridge().getPluginConfig();
-	}
-
-	public final PluginInfo getPluginInfo() {
+	public PluginInfo getPluginInfo() {
 		return this.plugin.getPluginInfo();
 	}
 
-	public final ExtensionManager getPluginManager() {
-		return this.extensionManager;
-	}
-
-	public Plugin getPluginObject() {
-		return this.plugin;
-	}
-
-	public void load() {
-		try {
-			this.bridge.load();
-		} catch (final PluginLoadingException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void registerCommand(final CommandExtension command) {
-		this.extensionManager.getCommandManager().register(command);
+	public void load() throws PluginLoadingException {
+		this.bridge.loadPlugin();
 	}
 
 	public void unload() {
 		try {
-			this.bridge.unload();
-		} catch (final PluginUnloadingException e) {
-			e.printStackTrace();
+			this.bridge.unloadPlugin();
+		} catch (final PluginUnloadingException e1) {
+			e1.printStackTrace();
 		}
 		try {
 			this.loader.close();
@@ -180,10 +143,6 @@ public class PluginExtension {
 			e.printStackTrace();
 		}
 
-	}
-
-	public void unregisterCommand(final CommandExtension command) {
-		this.extensionManager.getCommandManager().unregister(command);
 	}
 
 }

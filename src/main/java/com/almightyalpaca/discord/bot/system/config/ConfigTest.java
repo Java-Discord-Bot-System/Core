@@ -11,7 +11,8 @@ import com.google.gson.JsonSyntaxException;
 
 public class ConfigTest {
 
-	public static void main(final String[] args) throws JsonIOException, JsonSyntaxException, WrongTypeException, KeyNotFoundException, FileNotFoundException, IOException, InterruptedException {
+	public static void main(final String[] args)
+		throws JsonIOException, JsonSyntaxException, WrongTypeException, KeyNotFoundException, FileNotFoundException, IOException, InterruptedException {
 
 		final Config config = ConfigFactory.getConfig(File.createTempFile("config test file", ".json"));
 		System.out.println(config.getConfigFile().getAbsolutePath());

@@ -5,27 +5,23 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.almightyalpaca.discord.bot.system.command.ICommand;
+import com.almightyalpaca.discord.bot.system.command.Command;
 import com.almightyalpaca.discord.bot.system.config.Config;
 import com.almightyalpaca.discord.bot.system.exception.PluginLoadingException;
 import com.almightyalpaca.discord.bot.system.exception.PluginUnloadingException;
 import com.almightyalpaca.discord.bot.system.plugins.Plugin;
-import com.almightyalpaca.discord.bot.system.plugins.PluginInfo;
-import com.almightyalpaca.discord.bot.system.settings.SettingsManager;
 
 import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.User;
 
 public class ExtensionBridge {
 
-	private final Set<CommandExtension>	commands;
+	final Plugin plugin;
 
-	private final Plugin				plugin;
+	PluginExtension pluginExtension;
 
-	PluginExtension						pluginExtension;
+	final Set<CommandExtension> commands;
 
-	private final Set<Object>			eventHandlers;
+	final Set<Object> eventHandlers;
 
 	public ExtensionBridge(final Plugin plugin) {
 		this.plugin = plugin;
@@ -33,74 +29,66 @@ public class ExtensionBridge {
 		this.eventHandlers = new HashSet<>();
 	}
 
-	public File getCacheFolder() {
-		return this.pluginExtension.getPluginManager().cacheFolder;
+	public final ExtensionClassLoader getClassLoader() {
+		return this.pluginExtension.loader;
 	}
 
-	public Config getGuildConfig(final Guild guild) {
-		return this.pluginExtension.getPluginManager().getGuildConfig(guild);
+	public final CommandExtensionManager getCommandExtensionManager() {
+		return this.pluginExtension.extensionManager.commandManager;
 	}
 
-	public JDA getJDA() {
-		return this.pluginExtension.getPluginManager().getAPI();
+	public final ExtensionManager getExtensionManager() {
+		return this.pluginExtension.extensionManager;
 	}
 
-	public final Plugin getPlugin() {
-		return this.plugin;
+	public final JDA getJDA() {
+		return this.pluginExtension.extensionManager.api;
 	}
 
-	public final Config getPluginConfig() {
-		return this.pluginExtension.getPluginManager().getPluginConfig(this.plugin);
+	public final PluginExtension getPluginExtension() {
+		return this.pluginExtension;
 	}
 
-	public File getPluginFolder() {
-		return this.pluginExtension.getFolder();
+	public final File getPluginFolder() {
+		return this.pluginExtension.folder;
 	}
 
-	public final PluginInfo getPluginInfo() {
-		return this.plugin.getPluginInfo();
+	public final Config getSharedConfig(final String key) {
+		return this.pluginExtension.extensionManager.rootConfig.getOrCreateConfig("shared." + key);
 	}
 
-	public String getPrefix() {
-		return this.pluginExtension.getPluginManager().getPrefix();
+	final void initialize(final PluginExtension pluginExtension) {
+		this.pluginExtension = pluginExtension;
 	}
 
-	public final Config getSecureConfig(final String key) {
-		return this.pluginExtension.getPluginManager().getSecureConfig(key, this);
-	}
-
-	public SettingsManager getSettingsManager() {
-		return this.pluginExtension.getPluginManager().getSettingsManager();
-	}
-
-	public Config getUserConfig(final User user) {
-		return this.pluginExtension.getPluginManager().getUserConfig(user);
-	}
-
-	public void initialize(final PluginExtension object) {
-		this.pluginExtension = object;
-	}
-
-	public void load() throws PluginLoadingException {
+	public final void loadPlugin() throws PluginLoadingException {
 		this.plugin.load();
 	}
 
-	public final void registerCommand(final ICommand command) {
-		System.out.println("Registering command \"" + command.getClass().getName() + "\" as \"" + command.getName() + "\"");
-		final CommandExtension commandExtension = new CommandExtension(this.pluginExtension.getPluginManager().getCommandManager(), command);
+	public final boolean registerCommand(final Command command) {
+		final CommandExtension commandExtension = new CommandExtension(this.pluginExtension.extensionManager.commandManager, command);
 		this.commands.add(commandExtension);
-		this.pluginExtension.registerCommand(commandExtension);
+		return this.pluginExtension.extensionManager.commandManager.register(commandExtension);
 	}
 
-	public void registerEventHandler(final Object o) {
+	public final boolean registerEventHandler(final Object o) {
 		this.eventHandlers.add(o);
-		this.pluginExtension.getPluginManager().getEventManager().register(o);
+		return this.pluginExtension.extensionManager.eventManager.register(o);
 	}
 
-	public void unload() throws PluginUnloadingException {
-		this.plugin.unload();
+	public final void unloadPlugin() throws PluginUnloadingException {
+		PluginUnloadingException exception = null;
+		try {
+			this.plugin.unload();
+		} catch (final PluginUnloadingException e) {
+			exception = e;
+		}
 		this.unregisterAllCommands();
 		this.unregisterAllEventHandlers();
+		if (exception != null) {
+			throw exception;
+		}
+
 	}
 
 	public final void unregisterAllCommands() {
@@ -110,29 +98,18 @@ public class ExtensionBridge {
 			iterator.remove();
 			this.unregisterCommand(commandExtension);
 		}
-		if (this.commands.size() != 0) {
-			throw new RuntimeException("Could not remove all commands!");
-		}
 	}
 
-	public void unregisterAllEventHandlers() {
+	public final void unregisterAllEventHandlers() {
 		final Iterator<Object> iterator = this.eventHandlers.iterator();
 		while (iterator.hasNext()) {
 			final Object o = iterator.next();
 			iterator.remove();
 			this.unregisterEventHandler(o);
 		}
-		if (this.eventHandlers.size() != 0) {
-			throw new RuntimeException("Could not remove all event handlers!");
-		}
 	}
 
-	private final void unregisterCommand(final CommandExtension command) {
-		this.pluginExtension.unregisterCommand(command);
-		this.commands.remove(command);
-	}
-
-	public final boolean unregisterCommand(final ICommand command) {
+	public final boolean unregisterCommand(final Command command) {
 		for (final CommandExtension commandExtension : this.commands) {
 			if (commandExtension.getCommand() == command) {
 				this.unregisterCommand(commandExtension);
@@ -142,9 +119,14 @@ public class ExtensionBridge {
 		return false;
 	}
 
-	public void unregisterEventHandler(final Object o) {
+	private final boolean unregisterCommand(final CommandExtension command) {
+		this.commands.remove(command);
+		return this.pluginExtension.extensionManager.commandManager.unregister(command);
+	}
+
+	public final boolean unregisterEventHandler(final Object o) {
 		this.eventHandlers.remove(o);
-		this.pluginExtension.getPluginManager().getEventManager().unregister(o);
+		return this.pluginExtension.extensionManager.eventManager.unregister(o);
 	}
 
 }

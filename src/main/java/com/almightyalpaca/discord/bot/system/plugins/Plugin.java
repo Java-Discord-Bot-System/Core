@@ -2,22 +2,19 @@ package com.almightyalpaca.discord.bot.system.plugins;
 
 import java.io.File;
 
-import com.almightyalpaca.discord.bot.system.command.ICommand;
+import com.almightyalpaca.discord.bot.system.command.Command;
 import com.almightyalpaca.discord.bot.system.config.Config;
 import com.almightyalpaca.discord.bot.system.exception.PluginLoadingException;
 import com.almightyalpaca.discord.bot.system.exception.PluginUnloadingException;
 import com.almightyalpaca.discord.bot.system.extension.ExtensionBridge;
-import com.almightyalpaca.discord.bot.system.settings.GuildSettings;
-import com.almightyalpaca.discord.bot.system.settings.UserSettings;
 
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.JDA;
 
 public abstract class Plugin {
 
-	private final PluginInfo		info;
+	private final PluginInfo info;
 
-	private final ExtensionBridge	bridge;
+	private final ExtensionBridge bridge;
 
 	public Plugin(final PluginInfo info) {
 		this.info = info;
@@ -28,12 +25,16 @@ public abstract class Plugin {
 		return this.bridge;
 	}
 
-	public final GuildSettings getGuildConfig(final Guild guild) {
-		return this.getBridge().getSettingsManager().getGuildSettings(guild.getId());
+	public File getCacheFolder() {
+		return new File(this.bridge.getPluginFolder(), "cache");
+	}
+
+	public JDA getJDA() {
+		return this.bridge.getJDA();
 	}
 
 	public final Config getPluginConfig() {
-		return this.getBridge().getPluginConfig();
+		return this.bridge.getExtensionManager().getPluginConfig(this);
 	}
 
 	protected File getPluginFolder() {
@@ -44,27 +45,32 @@ public abstract class Plugin {
 		return this.info;
 	}
 
-	public final UserSettings getUserSettings(final User user) {
-		return this.getBridge().getSettingsManager().getUserSettings(user.getId());
+	public final Config getSharedConfig(final String key) {
+		return this.bridge.getSharedConfig(key);
 	}
 
 	public abstract void load() throws PluginLoadingException;
 
-	protected void registerCommand(final ICommand command) {
-		this.getBridge().registerCommand(command);
+	protected boolean registerCommand(final Command command) {
+		return this.bridge.registerCommand(command);
 	}
 
-	protected void registerEventHandler(final Object o) {
-		this.bridge.registerEventHandler(o);
+	protected boolean registerEventHandler(final Object o) {
+		return this.bridge.registerEventHandler(o);
 	}
 
 	public abstract void unload() throws PluginUnloadingException;
 
-	protected void unregisterCommand(final ICommand command) {
-		this.getBridge().unregisterCommand(command);
+	public void unloadPlugin() throws PluginUnloadingException {
+		this.bridge.unloadPlugin();
 	}
 
-	protected void unregisterEventHandler(final Object o) {
-		this.bridge.unregisterEventHandler(o);
+	protected boolean unregisterCommand(final Command command) {
+		return this.bridge.unregisterCommand(command);
 	}
+
+	protected boolean unregisterEventHandler(final Object o) {
+		return this.bridge.unregisterEventHandler(o);
+	}
+
 }
