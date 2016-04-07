@@ -33,10 +33,4 @@ public class ConfigFactory {
 		FileUtils.copyURLToFile(url, file);
 		return ConfigFactory.getConfig(file);
 	}
-
-	public static Config getDefaultConfig() throws IOException, WrongTypeException, KeyNotFoundException, JsonIOException, JsonSyntaxException {
-		final File file = new File("config.json");
-		return ConfigFactory.getConfig(file);
-	}
-
 }

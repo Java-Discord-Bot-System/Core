@@ -11,8 +11,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.almightyalpaca.discord.bot.system.command.Command;
-import com.almightyalpaca.discord.bot.system.events.CommandEvent;
-import com.almightyalpaca.discord.bot.system.events.PermissionEvent;
+import com.almightyalpaca.discord.bot.system.events.commands.CommandEvent;
+import com.almightyalpaca.discord.bot.system.events.commands.CommandExecutionEvent;
+import com.almightyalpaca.discord.bot.system.events.commands.CommandPrefixEvent;
+import com.almightyalpaca.discord.bot.system.events.manager.EventHandler;
 
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
 
@@ -37,12 +39,6 @@ public class CommandExtensionManager {
 		});
 	}
 
-	private boolean checkPermission(final CommandExtension command, final CommandEvent commandEvent) {
-		final PermissionEvent event = new PermissionEvent(this.extensionManager, command.command, commandEvent);
-		event.fire();
-		return event.getResult();
-	}
-
 	public void executeAsync(final Command command, final Method method, final Object[] args) {
 		this.executor.submit(() -> {
 			try {
@@ -53,25 +49,33 @@ public class CommandExtensionManager {
 		});
 	}
 
-	public void onCommand(final MessageReceivedEvent event) {
-		final CommandEvent commandEvent = new CommandEvent(this, event);
+	@EventHandler
+	private void onMessageReceived(final MessageReceivedEvent event) {
 
-		final String commandName = commandEvent.getCommandWithoutPrefix().substring(0,
-			commandEvent.getCommandWithoutPrefix().indexOf(" ") == -1 ? commandEvent.getCommandWithoutPrefix().length() : commandEvent.getCommandWithoutPrefix().indexOf(" "));
+		final CommandPrefixEvent commandPrefixEvent = new CommandPrefixEvent(this.extensionManager, event.getGuild());
+		commandPrefixEvent.fire();
+		for (final String prefix : commandPrefixEvent.getPrefixes()) {
+			if (event.getMessage().getRawContent().startsWith(prefix)) {
 
-		final CommandExtension command = this.commands.get(commandName);
+				final String commandWithoutPrefix = event.getMessage().getRawContent().replaceFirst(prefix, "");
 
-		if (command == null) {
-			// TODO fire event
-		} else {
-			if (this.checkPermission(command, commandEvent)) {
-				// TODO Fire acess granted event
-				command.execute(commandEvent);
-			} else {
-				// TODO Fire acess denied event
+				final String commandName = commandWithoutPrefix.substring(0, commandWithoutPrefix.indexOf(" ") == -1 ? commandWithoutPrefix.length() : commandWithoutPrefix.indexOf(" "));
+
+				final CommandExtension commandExtension = this.commands.get(commandName);
+
+				final CommandExecutionEvent commandExecutionEvent = new CommandExecutionEvent(this.extensionManager, commandExtension.command, event);
+				commandExecutionEvent.fire();
+
+				if (!commandExecutionEvent.isCancelled()) {
+					final CommandEvent commandEvent = new CommandEvent(this.extensionManager, event, prefix);
+					commandEvent.fire();
+
+					commandExtension.execute(commandEvent);
+				}
+
+				break;
 			}
 		}
-
 	}
 
 	public boolean register(final CommandExtension command) {

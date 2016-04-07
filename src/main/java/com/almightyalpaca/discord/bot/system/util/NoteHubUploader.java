@@ -34,8 +34,7 @@ public class NoteHubUploader {
 		final String password = DigestUtils.md5Hex(plainPassword);
 		final String data = "action=" + action + "&id=" + id + "&password=" + password + "&session=" + session + "&signature=" + signature + "&note=" + note;
 
-		final String response = Unirest.post("https://notehub.org/note").header("content-type", "application/x-www-form-urlencoded").header("accept", "text/html").body(data)
-			.asString().getBody();
+		final String response = Unirest.post("https://notehub.org/note").header("content-type", "application/x-www-form-urlencoded").header("accept", "text/html").body(data).asString().getBody();
 
 		final String subURL = response.substring(response.indexOf("\"") + 1, response.indexOf("\"", response.indexOf("\"") + 1));
 

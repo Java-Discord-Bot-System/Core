@@ -1,4 +1,4 @@
-package com.almightyalpaca.discord.bot.system.command.annotation;
+package com.almightyalpaca.discord.bot.system.command;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

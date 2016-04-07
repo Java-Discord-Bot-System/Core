@@ -8,9 +8,9 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.almightyalpaca.discord.bot.system.command.Command;
+import com.almightyalpaca.discord.bot.system.command.CommandHandler;
 import com.almightyalpaca.discord.bot.system.command.CommandInfo;
-import com.almightyalpaca.discord.bot.system.command.annotation.CommandHandler;
-import com.almightyalpaca.discord.bot.system.events.CommandEvent;
+import com.almightyalpaca.discord.bot.system.events.commands.CommandEvent;
 
 public class CommandExtension {
 

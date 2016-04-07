@@ -11,7 +11,6 @@ import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
-import com.almightyalpaca.discord.bot.system.PluginSelector;
 import com.almightyalpaca.discord.bot.system.config.Config;
 import com.almightyalpaca.discord.bot.system.config.ConfigFactory;
 import com.almightyalpaca.discord.bot.system.config.exception.KeyNotFoundException;
@@ -21,6 +20,7 @@ import com.almightyalpaca.discord.bot.system.exception.PluginException;
 import com.almightyalpaca.discord.bot.system.exception.PluginLoadingException;
 import com.almightyalpaca.discord.bot.system.plugins.Plugin;
 import com.almightyalpaca.discord.bot.system.plugins.PluginInfo;
+import com.almightyalpaca.discord.bot.system.plugins.PluginSelector;
 import com.almightyalpaca.discord.bot.system.settings.SettingsManager;
 import com.almightyalpaca.discord.bot.system.util.GCUtil;
 import com.almightyalpaca.discord.bot.system.util.URLUtils;
@@ -48,35 +48,42 @@ public class ExtensionManager {
 
 	final File cacheFolder;
 
-	public ExtensionManager() throws JsonIOException, JsonSyntaxException, WrongTypeException, KeyNotFoundException, FileNotFoundException, IOException, LoginException,
-		IllegalArgumentException, InterruptedException {
+	public ExtensionManager()
+		throws JsonIOException, JsonSyntaxException, WrongTypeException, KeyNotFoundException, FileNotFoundException, IOException, LoginException, IllegalArgumentException, InterruptedException {
 		this.plugins = new HashSet<>();
 
 		this.cacheFolder = new File("cache");
+		this.cacheFolder.mkdirs();
 
 		this.configFolder = new File("config");
 		this.configFolder.mkdirs();
 
 		this.rootConfig = ConfigFactory.getConfig(new File(this.configFolder, "config.json"));
 
-		MessageBuilderSettings.setNotehubPassword(this.rootConfig.getOrPutString("messages.upload.notehub.password", "Discord Bot"));
+		MessageBuilderSettings.setNotehubPassword(this.rootConfig.getString("messages.upload.notehub.password", "Discord Bot"));
 
-		this.settingsManager = new SettingsManager(ConfigFactory.getConfig(new File(this.configFolder, "users.json")),
-			ConfigFactory.getConfig(new File(this.configFolder, "guilds.json")));
-
-		this.eventManager = new EventManager(this);
+		this.settingsManager = new SettingsManager(ConfigFactory.getConfig(new File(this.configFolder, "users.json")), ConfigFactory.getConfig(new File(this.configFolder, "guilds.json")));
 
 		this.commandManager = new CommandExtensionManager(this);
 
-		final JDABuilder builder = new JDABuilder(this.rootConfig.getString("secure.discord.email"), this.rootConfig.getString("secure.discord.password"))
+		this.eventManager = new EventManager(this);
+		this.eventManager.register(this.commandManager);
+
+		final JDABuilder builder = new JDABuilder(this.rootConfig.getString("shared.discord.email", "EMAIL"), this.rootConfig.getString("shared.discord.password", "PASSWORD"))
 			.setEventManager(this.eventManager);
 
-		if (this.rootConfig.getBoolean("proxy.use")) {
-			builder.setProxy(this.rootConfig.getString("proxy.host"), this.rootConfig.getInt("proxy.port"));
+		if (this.rootConfig.getBoolean("proxy.use", false)) {
+			builder.setProxy(this.rootConfig.getString("proxy.host", ""), this.rootConfig.getInt("proxy.port", 8080));
 		}
+
+		this.rootConfig.save();
 
 		this.api = builder.buildAsync();
 
+	}
+
+	public JDA getJDA() {
+		return this.api;
 	}
 
 	public Config getPluginConfig(final Plugin plugin) {
@@ -85,14 +92,6 @@ public class ExtensionManager {
 
 	public final Set<PluginExtension> getPlugins() {
 		return Collections.unmodifiableSet(this.plugins);
-	}
-
-	public String getPrefix() {
-		final String prefix = this.rootConfig.getConfig("commands").getString("prefix");
-		if (prefix.equalsIgnoreCase("@mention")) {
-			return this.api.getSelfInfo().getAsMention() + " ";
-		}
-		return prefix;
 	}
 
 	public boolean isLoaded(final PluginInfo info) {

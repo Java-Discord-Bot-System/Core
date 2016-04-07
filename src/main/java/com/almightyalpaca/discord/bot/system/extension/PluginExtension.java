@@ -36,8 +36,7 @@ public class PluginExtension {
 	final Class<? extends Plugin>	pluginClass;
 
 	@SuppressWarnings("unchecked")
-	public PluginExtension(final ExtensionManager extensionManager, final File folder)
-		throws InvalidPluginException, IOException, PluginInitializingException, PluginLoadingException {
+	public PluginExtension(final ExtensionManager extensionManager, final File folder) throws InvalidPluginException, IOException, PluginInitializingException, PluginLoadingException {
 		System.out.println("Begin initializing plugin: " + folder);
 		this.extensionManager = extensionManager;
 		this.folder = folder;

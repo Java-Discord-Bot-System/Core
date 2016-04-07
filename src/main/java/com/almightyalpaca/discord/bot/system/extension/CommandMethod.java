@@ -5,10 +5,10 @@ import java.lang.reflect.Method;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 
-import com.almightyalpaca.discord.bot.system.command.annotation.CommandHandler;
+import com.almightyalpaca.discord.bot.system.command.CommandHandler;
 import com.almightyalpaca.discord.bot.system.command.arguments.Arguments;
 import com.almightyalpaca.discord.bot.system.command.arguments.parsers.CommandAgumentParsers;
-import com.almightyalpaca.discord.bot.system.events.CommandEvent;
+import com.almightyalpaca.discord.bot.system.events.commands.CommandEvent;
 
 public class CommandMethod {
 

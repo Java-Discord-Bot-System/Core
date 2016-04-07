@@ -24,8 +24,7 @@ public class ExtensionClassLoader extends URLClassLoader {
 		public Class<?> loadClass(final String name, final boolean resolve) throws ClassNotFoundException {
 			try {
 				return this.loader.loadClazz(name, resolve);
-			} catch (final ClassNotFoundException ignored) {
-			}
+			} catch (final ClassNotFoundException ignored) {}
 			return super.loadClass(name, resolve);
 		}
 
@@ -36,11 +35,6 @@ public class ExtensionClassLoader extends URLClassLoader {
 	public ExtensionClassLoader(final URL url, final URL[] urls) {
 		super(urls);
 		this.pluginLoader = new JarClassLoader(url, this);
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		System.out.println("FINALIZING EXTENSIONCLASSLOADER");
 	}
 
 	@Override
@@ -57,8 +51,7 @@ public class ExtensionClassLoader extends URLClassLoader {
 	public Class<?> loadClass(final String name, final boolean resolve) throws ClassNotFoundException {
 		try {
 			return this.pluginLoader.loadClass(name, resolve);
-		} catch (final ClassNotFoundException ignored) {
-		}
+		} catch (final ClassNotFoundException ignored) {}
 		return super.loadClass(name, resolve);
 	}
 

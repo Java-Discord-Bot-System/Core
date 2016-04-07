@@ -1,6 +1,6 @@
 package com.almightyalpaca.discord.bot.system.command;
 
-import com.almightyalpaca.discord.bot.system.events.CommandEvent;
+import com.almightyalpaca.discord.bot.system.events.commands.CommandEvent;
 
 public abstract class Command {
 
@@ -18,7 +18,6 @@ public abstract class Command {
 		return this.info;
 	}
 
-	public void unknownSyntax(final CommandEvent event) {
-	}
+	public void unknownSyntax(final CommandEvent event) {}
 
 }

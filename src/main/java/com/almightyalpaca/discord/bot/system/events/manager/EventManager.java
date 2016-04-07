@@ -15,7 +15,6 @@ import com.almightyalpaca.discord.bot.system.extension.EventManagerExtension;
 import com.almightyalpaca.discord.bot.system.extension.ExtensionManager;
 
 import net.dv8tion.jda.events.Event;
-import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.hooks.IEventManager;
 
 public class EventManager extends EventManagerExtension implements IEventManager {
@@ -51,12 +50,6 @@ public class EventManager extends EventManagerExtension implements IEventManager
 	public void handle(final Object event) {
 		for (final Handler handler : new ArrayList<>(this.handlers.values())) {
 			handler.handle(event);
-		}
-		if (event instanceof MessageReceivedEvent) {
-			final MessageReceivedEvent msgEvent = (MessageReceivedEvent) event;
-			if (msgEvent.getMessage().getRawContent().startsWith(this.extensionManager.getPrefix())) {
-				getCommandManager().onCommand(msgEvent);
-			}
 		}
 	}
 

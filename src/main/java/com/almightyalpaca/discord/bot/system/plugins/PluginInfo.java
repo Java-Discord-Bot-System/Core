@@ -11,17 +11,15 @@ public class PluginInfo {
 		}
 
 		/**
-		 * Compares two version strings. Use this instead of String.compareTo() for a non-lexicographical comparison
-		 * that works for version strings. e.g. "1.10".compareTo("1.6").
+		 * Compares two version strings. Use this instead of String.compareTo() for a non-lexicographical comparison that works for version strings. e.g. "1.10".compareTo("1.6").
 		 * 
 		 * @note It does not work if "1.10" is supposed to be equal to "1.10.0".
 		 * @param v1
 		 *            first version to compare.
 		 * @param v2
 		 *            second version to compare.
-		 * @return The result is a negative integer if v1 is _numerically_ less than v2. The result is a positive
-		 *         integer if v1 is _numerically_ greater than v2. The result is zero if the strings are _numerically_
-		 *         equal.
+		 * @return The result is a negative integer if v1 is _numerically_ less than v2. The result is a positive integer if v1 is _numerically_ greater than v2. The result is zero
+		 *         if the strings are _numerically_ equal.
 		 * @author Alex Gitelman (stackoverflow.com)
 		 */
 		public static int compare(final Version v1, final Version v2) {
@@ -47,11 +45,6 @@ public class PluginInfo {
 
 		public int compare(final Version v) {
 			return Version.compare(this, v);
-		}
-
-		@Override
-		protected void finalize() throws Throwable {
-			System.out.println("FINALIZING VERSION");
 		}
 
 		public final String getNumber() {
@@ -98,11 +91,6 @@ public class PluginInfo {
 
 	public boolean equals(final PluginInfo info) {
 		return info.id.equalsIgnoreCase(this.id);
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		System.out.println("FINALIZING PLUGININFO: " + this.name);
 	}
 
 	public final String getAuthor() {

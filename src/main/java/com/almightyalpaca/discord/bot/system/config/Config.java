@@ -43,12 +43,26 @@ public class Config {
 		}
 	}
 
+	public final BigDecimal getBigDecimal(final String key, final BigDecimal defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getBigDecimal(key);
+	}
+
 	public BigInteger getBigInteger(final String key) throws WrongTypeException, KeyNotFoundException {
 		try {
 			return this.getJsonObject(key).getAsBigInteger();
 		} catch (final Exception e) {
 			throw new WrongTypeException(e);
 		}
+	}
+
+	public final BigInteger getBigInteger(final String key, final BigInteger defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getBigInteger(key);
 	}
 
 	public boolean getBoolean(final String key) throws WrongTypeException, KeyNotFoundException {
@@ -59,12 +73,26 @@ public class Config {
 		}
 	}
 
+	public final boolean getBoolean(final String key, final boolean defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getBoolean(key);
+	}
+
 	public byte getByte(final String key) throws WrongTypeException, KeyNotFoundException {
 		try {
 			return this.getJsonPrimitive(key).getAsByte();
 		} catch (final Exception e) {
 			throw new WrongTypeException(e);
 		}
+	}
+
+	public final byte getByte(final String key, final byte defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getByte(key);
 	}
 
 	public char getCharacter(final String key) throws WrongTypeException, KeyNotFoundException {
@@ -75,12 +103,26 @@ public class Config {
 		}
 	}
 
+	public final char getCharacter(final String key, final char defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getCharacter(key);
+	}
+
 	public Config getConfig(final String key) throws WrongTypeException, KeyNotFoundException {
 		final JsonObject object = this.getJsonObject(key);
 		if (object == null) {
 			throw new KeyNotFoundException();
 		}
 		return new Config(this, object);
+	}
+
+	public final Config getConfig(final String key, final Config defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getConfig(key);
 	}
 
 	public File getConfigFile() {
@@ -95,6 +137,13 @@ public class Config {
 		} catch (final NullPointerException e) {
 			throw new KeyNotFoundException(e);
 		}
+	}
+
+	public final double getDouble(final String key, final double defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getDouble(key);
 	}
 
 	public Map<String, Object> getEntries() {
@@ -115,6 +164,13 @@ public class Config {
 		}
 	}
 
+	public final float getFloat(final String key, final float defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getFloat(key);
+	}
+
 	public int getInt(final String key) throws WrongTypeException, KeyNotFoundException {
 		try {
 			return this.getJsonPrimitive(key).getAsInt();
@@ -125,6 +181,13 @@ public class Config {
 		}
 	}
 
+	public final int getInt(final String key, final int defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getInt(key);
+	}
+
 	public JsonArray getJsonArray(final String key) throws WrongTypeException, KeyNotFoundException {
 		try {
 			return this.getJsonElement(key).getAsJsonArray();
@@ -133,6 +196,13 @@ public class Config {
 		} catch (final NullPointerException e) {
 			throw new KeyNotFoundException(e);
 		}
+	}
+
+	public final JsonArray getJsonArray(final String key, final JsonArray defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getJsonArray(key);
 	}
 
 	private JsonElement getJsonElement(final String key) throws KeyNotFoundException, WrongTypeException {
@@ -168,6 +238,13 @@ public class Config {
 		}
 	}
 
+	public final JsonElement getJsonElement(final String key, final JsonElement defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getJsonElement(key);
+	}
+
 	public JsonObject getJsonObject(final String key) throws WrongTypeException, KeyNotFoundException {
 		try {
 			return this.getJsonElement(key).getAsJsonObject();
@@ -176,6 +253,13 @@ public class Config {
 		} catch (final NullPointerException e) {
 			throw new KeyNotFoundException(e);
 		}
+	}
+
+	public final JsonObject getJsonObject(final String key, final JsonObject defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getJsonObject(key);
 	}
 
 	private JsonPrimitive getJsonPrimitive(final String key) throws KeyNotFoundException, WrongTypeException {
@@ -188,6 +272,13 @@ public class Config {
 		}
 	}
 
+	public final JsonPrimitive getJsonPrimitive(final String key, final JsonPrimitive defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getJsonPrimitive(key);
+	}
+
 	public long getLong(final String key) throws WrongTypeException, KeyNotFoundException {
 		try {
 			return this.getJsonPrimitive(key).getAsLong();
@@ -196,6 +287,13 @@ public class Config {
 		} catch (final NullPointerException e) {
 			throw new KeyNotFoundException(e);
 		}
+	}
+
+	public final long getLong(final String key, final long defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getLong(key);
 	}
 
 	public Number getNumber(final String key) throws WrongTypeException, KeyNotFoundException {
@@ -208,127 +306,15 @@ public class Config {
 		}
 	}
 
-	public Config getOrCreateConfig(final String key) {
-		return this.getOrPutConfig(key, new Config(this, new JsonObject()));
-	}
-
-	public final BigDecimal getOrPutBigDecimal(final String key, final BigDecimal defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getBigDecimal(key);
-	}
-
-	public final BigInteger getOrPutBigInteger(final String key, final BigInteger defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getBigInteger(key);
-	}
-
-	public final boolean getOrPutBoolean(final String key, final boolean defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getBoolean(key);
-	}
-
-	public final byte getOrPutByte(final String key, final byte defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getByte(key);
-	}
-
-	public final char getOrPutCharacter(final String key, final char defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getCharacter(key);
-	}
-
-	public final Config getOrPutConfig(final String key, final Config defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getConfig(key);
-	}
-
-	public final double getOrPutDouble(final String key, final double defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getDouble(key);
-	}
-
-	public final float getOrPutFloat(final String key, final float defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getFloat(key);
-	}
-
-	public final int getOrPutInt(final String key, final int defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getInt(key);
-	}
-
-	public final JsonArray getOrPutJsonArray(final String key, final JsonArray defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getJsonArray(key);
-	}
-
-	public final JsonElement getOrPutJsonElement(final String key, final JsonElement defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getJsonElement(key);
-	}
-
-	public final JsonObject getOrPutJsonObject(final String key, final JsonObject defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getJsonObject(key);
-	}
-
-	public final JsonPrimitive getOrPutJsonPrimitive(final String key, final JsonPrimitive defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getJsonPrimitive(key);
-	}
-
-	public final long getOrPutLong(final String key, final long defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getLong(key);
-	}
-
-	public final Number getOrPutNumber(final String key, final Number defaultValue) {
+	public final Number getNumber(final String key, final Number defaultValue) {
 		if (!this.hasKey(key)) {
 			this.put(key, defaultValue);
 		}
 		return this.getNumber(key);
 	}
 
-	public final short getOrPutShort(final String key, final short defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getShort(key);
-	}
-
-	public final String getOrPutString(final String key, final String defaultValue) {
-		if (!this.hasKey(key)) {
-			this.put(key, defaultValue);
-		}
-		return this.getString(key);
+	public Config getOrCreateConfig(final String key) {
+		return this.getConfig(key, new Config(this, new JsonObject()));
 	}
 
 	public short getShort(final String key) throws WrongTypeException, KeyNotFoundException {
@@ -339,8 +325,22 @@ public class Config {
 		}
 	}
 
+	public final short getShort(final String key, final short defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getShort(key);
+	}
+
 	public String getString(final String key) throws WrongTypeException, KeyNotFoundException {
 		return this.getJsonPrimitive(key).getAsString();
+	}
+
+	public final String getString(final String key, final String defaultValue) {
+		if (!this.hasKey(key)) {
+			this.put(key, defaultValue);
+		}
+		return this.getString(key);
 	}
 
 	public boolean hasKey(final String key) {
