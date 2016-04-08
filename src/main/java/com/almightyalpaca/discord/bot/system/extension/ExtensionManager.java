@@ -17,7 +17,6 @@ import com.almightyalpaca.discord.bot.system.config.exception.KeyNotFoundExcepti
 import com.almightyalpaca.discord.bot.system.config.exception.WrongTypeException;
 import com.almightyalpaca.discord.bot.system.events.manager.EventManager;
 import com.almightyalpaca.discord.bot.system.exception.PluginException;
-import com.almightyalpaca.discord.bot.system.exception.PluginLoadingException;
 import com.almightyalpaca.discord.bot.system.plugins.Plugin;
 import com.almightyalpaca.discord.bot.system.plugins.PluginInfo;
 import com.almightyalpaca.discord.bot.system.plugins.PluginSelector;
@@ -113,7 +112,7 @@ public class ExtensionManager {
 				extension = null;
 				GCUtil.runGC(10);
 			}
-		} catch (IOException | PluginException | PluginLoadingException e) {
+		} catch (IOException | PluginException e) {
 			e.printStackTrace();
 		}
 	}

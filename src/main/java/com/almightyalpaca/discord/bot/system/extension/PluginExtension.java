@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import com.almightyalpaca.discord.bot.system.exception.InvalidPluginException;
-import com.almightyalpaca.discord.bot.system.exception.PluginInitializingException;
+import com.almightyalpaca.discord.bot.system.exception.PluginException;
 import com.almightyalpaca.discord.bot.system.exception.PluginLoadingException;
 import com.almightyalpaca.discord.bot.system.exception.PluginUnloadingException;
 import com.almightyalpaca.discord.bot.system.plugins.Plugin;
@@ -36,7 +35,7 @@ public class PluginExtension {
 	final Class<? extends Plugin>	pluginClass;
 
 	@SuppressWarnings("unchecked")
-	public PluginExtension(final ExtensionManager extensionManager, final File folder) throws InvalidPluginException, IOException, PluginInitializingException, PluginLoadingException {
+	public PluginExtension(final ExtensionManager extensionManager, final File folder) throws PluginException, IOException, PluginLoadingException {
 		System.out.println("Begin initializing plugin: " + folder);
 		this.extensionManager = extensionManager;
 		this.folder = folder;
@@ -44,7 +43,7 @@ public class PluginExtension {
 		libs.mkdirs();
 		this.jar = new File(folder, "Plugin.jar");
 		if (!this.jar.exists()) {
-			throw new InvalidPluginException("Plugin.jar does not exist !");
+			throw new PluginException("Plugin.jar does not exist !");
 		}
 
 		JarFile jarFile = new JarFile(this.jar);
@@ -91,9 +90,9 @@ public class PluginExtension {
 		jarFile.close();
 
 		if (list.size() > 1) {
-			throw new InvalidPluginException("Too many Plugin classes found!");
+			throw new PluginException("Too many Plugin classes found!");
 		} else if (list.size() < 1) {
-			throw new InvalidPluginException("No Plugin class found!");
+			throw new PluginException("No Plugin class found!");
 		} else {
 			this.pluginClass = list.get(0);
 			try {
@@ -103,11 +102,11 @@ public class PluginExtension {
 					constructor.setAccessible(true);
 					this.plugin = constructor.newInstance();
 				} catch (final Exception e) {
-					throw new PluginInitializingException(e);
+					throw new PluginException(e);
 				}
 
 			} catch (final Exception e) {
-				throw new PluginInitializingException(e);
+				throw new PluginException(e);
 			}
 
 			this.bridge = this.plugin.getBridge();

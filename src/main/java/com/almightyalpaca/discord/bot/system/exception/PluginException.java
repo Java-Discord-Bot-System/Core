@@ -4,12 +4,20 @@ public class PluginException extends Exception {
 
 	private static final long serialVersionUID = -3733583680854582146L;
 
-	public PluginException(final String string) {
-		super(string);
+	public PluginException() {
+		super();
 	}
 
-	public PluginException(final Throwable throwable) {
-		super(throwable);
+	public PluginException(final String s) {
+		super(s);
+	}
+
+	public PluginException(final String s, final Throwable t) {
+		super(s, t);
+	}
+
+	public PluginException(final Throwable t) {
+		super(t);
 	}
 
 }
