@@ -1,41 +1,41 @@
-﻿[
-  {
+﻿[  
+  {  
     "emoji":"angry",
-    "shortcuts":[
+    "shortcuts":[  
       ">:(",
       ">:-(",
       ">=(",
       ">=-("
     ]
   },
-  {
+  {  
     "emoji":"blush",
-    "shortcuts":[
+    "shortcuts":[  
       ": \")",
       ":-\")",
       "=\")",
       "=-\")"
     ]
   },
-  {
+  {  
     "emoji":"broken_heart",
-    "shortcuts":[
+    "shortcuts":[  
       "</3",
       "<\\3"
     ]
   },
-  {
+  {  
     "emoji":"confused",
-    "shortcuts":[
+    "shortcuts":[  
       ":-\\",
       ":-/",
       "=-\\",
       "=-/"
     ]
   },
-  {
+  {  
     "emoji":"cry",
-    "shortcuts":[
+    "shortcuts":[  
       ":\"(",
       ":\"-(",
       ":,(",
@@ -46,34 +46,34 @@
       "=,-("
     ]
   },
-  {
+  {  
     "emoji":"frowning",
-    "shortcuts":[
+    "shortcuts":[  
       ":(",
       ":-(",
       "=(",
       "=-("
     ]
   },
-  {
+  {  
     "emoji":"heart",
-    "shortcuts":[
+    "shortcuts":[  
       "<3",
       "♡"
     ]
   },
-  {
+  {  
     "emoji":"imp",
-    "shortcuts":[
+    "shortcuts":[  
       "]:(",
       "]:-(",
       "]=(",
       "]=-("
     ]
   },
-  {
+  {  
     "emoji":"innocent",
-    "shortcuts":[
+    "shortcuts":[  
       "o:)",
       "O:)",
       "o:-)",
@@ -88,9 +88,9 @@
       "0=-)"
     ]
   },
-  {
+  {  
     "emoji":"joy",
-    "shortcuts":[
+    "shortcuts":[  
       ":\")",
       ":\"-)",
       ":,)",
@@ -109,34 +109,34 @@
       "=,-D"
     ]
   },
-  {
+  {  
     "emoji":"kissing",
-    "shortcuts":[
+    "shortcuts":[  
       ":*",
       ":-*",
       "=*",
       "=-*"
     ]
   },
-  {
+  {  
     "emoji":"laughing",
-    "shortcuts":[
+    "shortcuts":[  
       "x-)",
       "X-)"
     ]
   },
-  {
+  {  
     "emoji":"neutral_face",
-    "shortcuts":[
+    "shortcuts":[  
       ":|",
       ":-|",
       "=|",
       "=-|"
     ]
   },
-  {
+  {  
     "emoji":"open_mouth",
-    "shortcuts":[
+    "shortcuts":[  
       ":o",
       ":-o",
       ":O",
@@ -147,45 +147,45 @@
       "=-O"
     ]
   },
-  {
+  {  
     "emoji":"rage",
-    "shortcuts":[
+    "shortcuts":[  
       ":@",
       ":-@",
       "=@",
       "=-@"
     ]
   },
-  {
+  {  
     "emoji":"smile",
-    "shortcuts":[
+    "shortcuts":[  
       ":D",
       ":-D",
       "=D",
       "=-D"
     ]
   },
-  {
+  {  
     "emoji":"smiley",
-    "shortcuts":[
+    "shortcuts":[  
       ":)",
       ":-)",
       "=)",
       "=-)"
     ]
   },
-  {
+  {  
     "emoji":"smiling_imp",
-    "shortcuts":[
+    "shortcuts":[  
       "]:)",
       "]:-)",
       "]=)",
       "]=-)"
     ]
   },
-  {
+  {  
     "emoji":"sob",
-    "shortcuts":[
+    "shortcuts":[  
       ":,\"(",
       ":,\"-(",
       ";(",
@@ -194,43 +194,43 @@
       "=,\"-("
     ]
   },
-  {
+  {  
     "emoji":"stuck_out_tongue",
-    "shortcuts":[
+    "shortcuts":[  
       ":P",
       ":-P",
       "=P",
       "=-P"
     ]
   },
-  {
+  {  
     "emoji":"sunglasses",
-    "shortcuts":[
+    "shortcuts":[  
       "8-)",
       "B-)"
     ]
   },
-  {
+  {  
     "emoji":"sweat",
-    "shortcuts":[
+    "shortcuts":[  
       ",:(",
       ",:-(",
       ",=(",
       ",=-("
     ]
   },
-  {
+  {  
     "emoji":"sweat_smile",
-    "shortcuts":[
+    "shortcuts":[  
       ",:)",
       ",:-)",
       ",=)",
       ",=-)"
     ]
   },
-  {
+  {  
     "emoji":"unamused",
-    "shortcuts":[
+    "shortcuts":[  
       ":s",
       ":-S",
       ":z",
@@ -245,9 +245,9 @@
       "=-$"
     ]
   },
-  {
+  {  
     "emoji":"wink",
-    "shortcuts":[
+    "shortcuts":[  
       ";)",
       ";-)"
     ]
