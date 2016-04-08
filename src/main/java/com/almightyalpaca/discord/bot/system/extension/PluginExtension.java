@@ -36,7 +36,6 @@ public class PluginExtension {
 
 	@SuppressWarnings("unchecked")
 	public PluginExtension(final ExtensionManager extensionManager, final File folder) throws PluginException, IOException, PluginLoadingException {
-		System.out.println("Begin initializing plugin: " + folder);
 		this.extensionManager = extensionManager;
 		this.folder = folder;
 		final File libs = new File(folder, "lib");
@@ -79,7 +78,6 @@ public class PluginExtension {
 			try {
 				final Class<?> clazz = this.loader.loadClass(StringUtils.replaceLast(jarEntry.getName().replace("/", "."), ".class", ""), true);
 				if (Plugin.class.isAssignableFrom(clazz)) {
-					System.out.println("Found plugin main class: " + clazz.getName());
 					list.add((Class<? extends Plugin>) clazz);
 				}
 			} catch (final ClassNotFoundException e) {
@@ -113,8 +111,6 @@ public class PluginExtension {
 			this.bridge.initialize(this);
 
 		}
-
-		System.out.println("Finished initializing plugin: " + folder);
 	}
 
 	public final ExtensionBridge getBridge() {
