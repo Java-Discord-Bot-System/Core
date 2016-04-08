@@ -21,6 +21,14 @@ public abstract class Plugin {
 		this.bridge = new ExtensionBridge(this);
 	}
 
+	public Plugin(final String id, final PluginInfo.Version version, final String author, final String name, final String description) {
+		this(new PluginInfo(id, version, author, name, description));
+	}
+
+	public Plugin(final String id, final String version, final String author, final String name, final String description) {
+		this(new PluginInfo(id, version, author, name, description));
+	}
+
 	public ExtensionBridge getBridge() {
 		return this.bridge;
 	}
