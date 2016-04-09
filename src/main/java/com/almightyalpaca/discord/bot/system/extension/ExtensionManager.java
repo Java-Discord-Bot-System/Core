@@ -13,6 +13,7 @@ import javax.security.auth.login.LoginException;
 
 import com.almightyalpaca.discord.bot.system.config.Config;
 import com.almightyalpaca.discord.bot.system.config.ConfigFactory;
+import com.almightyalpaca.discord.bot.system.config.exception.ConfigSaveException;
 import com.almightyalpaca.discord.bot.system.config.exception.KeyNotFoundException;
 import com.almightyalpaca.discord.bot.system.config.exception.WrongTypeException;
 import com.almightyalpaca.discord.bot.system.events.manager.EventManager;
@@ -71,8 +72,10 @@ public class ExtensionManager {
 		final JDABuilder builder = new JDABuilder(this.rootConfig.getString("shared.discord.email", "EMAIL"), this.rootConfig.getString("shared.discord.password", "PASSWORD"))
 			.setEventManager(this.eventManager);
 
+		final String proxyAdress = this.rootConfig.getString("proxy.host", "");
+		final int proxyPort = this.rootConfig.getInt("proxy.port", 8080);
 		if (this.rootConfig.getBoolean("proxy.use", false)) {
-			builder.setProxy(this.rootConfig.getString("proxy.host", ""), this.rootConfig.getInt("proxy.port", 8080));
+			builder.setProxy(proxyAdress, proxyPort);
 		}
 
 		this.rootConfig.save();
@@ -103,16 +106,22 @@ public class ExtensionManager {
 	}
 
 	public void loadPlugin(final File pluginFolder) {
+		PluginExtension extension = null;
 		try {
-			PluginExtension extension = new PluginExtension(this, pluginFolder);
+			extension = new PluginExtension(this, pluginFolder);
 			if (!this.isLoaded(extension.plugin.getPluginInfo())) {
 				extension.load();
 				this.plugins.add(extension);
 			} else {
-				extension = null;
 				GCUtil.runGC(10);
 			}
 		} catch (IOException | PluginException e) {
+			this.plugins.remove(extension);
+			e.printStackTrace();
+		}
+		try {
+			this.rootConfig.save();
+		} catch (final ConfigSaveException e) {
 			e.printStackTrace();
 		}
 	}
@@ -125,8 +134,7 @@ public class ExtensionManager {
 
 		for (final File pluginDir : pluginsFolder.listFiles()) {
 			if (!pluginDir.isDirectory()) {
-				continue; // Only folders for now, single jar and class files
-							// will come later
+				continue; // Only folders for now, single jar and class files will come later
 			} else {
 				this.loadPlugin(pluginDir);
 			}

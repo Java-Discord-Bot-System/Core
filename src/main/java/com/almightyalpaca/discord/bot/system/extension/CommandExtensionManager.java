@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +31,7 @@ public class CommandExtensionManager {
 	public CommandExtensionManager(final ExtensionManager extensionManager) {
 		this.extensionManager = extensionManager;
 		this.commands = new HashMap<>();
-		this.executor = new ThreadPoolExecutor(1, 10, 1L, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>(), (ThreadFactory) r -> {
+		this.executor = new ThreadPoolExecutor(1, 10, 1L, TimeUnit.MINUTES, new LinkedBlockingQueue<Runnable>(), r -> {
 			final Thread thread = new Thread(r, "CommandExecution-Thread");
 			thread.setPriority(Thread.NORM_PRIORITY + 1);
 			return thread;
