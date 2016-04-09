@@ -205,7 +205,7 @@ public class Config {
 		return this.getJsonArray(key);
 	}
 
-	private JsonElement getJsonElement(final String key) throws KeyNotFoundException, WrongTypeException {
+	public JsonElement getJsonElement(final String key) throws KeyNotFoundException, WrongTypeException {
 		final String[] path = key.split("\\.");
 		JsonElement value = this.config;
 		try {
@@ -262,7 +262,7 @@ public class Config {
 		return this.getJsonObject(key);
 	}
 
-	private JsonPrimitive getJsonPrimitive(final String key) throws KeyNotFoundException, WrongTypeException {
+	public JsonPrimitive getJsonPrimitive(final String key) throws KeyNotFoundException, WrongTypeException {
 		try {
 			return this.getJsonElement(key).getAsJsonPrimitive();
 		} catch (final IllegalStateException e) {
@@ -352,53 +352,8 @@ public class Config {
 		return true;
 	}
 
-	public boolean isArray(final String key) {
-		return this.isJsonArray(key);
-	}
-
-	public boolean isConfig(final String key) {
-		return this.isJsonObject(key);
-	}
-
 	public boolean isEmpty() {
 		return this.config.entrySet().isEmpty();
-	}
-
-	protected boolean isJsonArray(final String key) {
-		return this.config.isJsonArray();
-	}
-
-	protected boolean isJsonNull(final String key) {
-		return this.config.isJsonNull();
-	}
-
-	protected boolean isJsonObject(final String key) {
-		return this.config.isJsonObject();
-	}
-
-	protected boolean isJsonPrimitive(final String key) {
-		return this.config.isJsonPrimitive();
-	}
-
-	public boolean isNull(final String key) {
-		return this.isJsonNull(key);
-	}
-
-	public boolean isNumber(final String key) {
-		if (this.isJsonPrimitive(key)) {
-			return this.getJsonPrimitive(key).isNumber();
-		} else {
-			return false;
-		}
-
-	}
-
-	public boolean isString(final String key) {
-		if (this.isJsonPrimitive(key)) {
-			return this.getJsonPrimitive(key).isString();
-		} else {
-			return false;
-		}
 	}
 
 	public void put(final String key, final boolean value) {
