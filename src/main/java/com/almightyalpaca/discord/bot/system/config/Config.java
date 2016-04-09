@@ -27,10 +27,6 @@ public class Config {
 		this.config = config;
 	}
 
-	protected void autoSave() {
-		this.parent.autoSave();
-	}
-
 	public void clear() {
 		this.config.entrySet().clear();
 	}
@@ -415,7 +411,6 @@ public class Config {
 			throw e;
 		}
 		current.add(finalKey, value);
-		this.autoSave();
 	}
 
 	public void put(final String key, final Number value) {

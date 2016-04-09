@@ -29,13 +29,6 @@ public class RootConfig extends Config {
 	}
 
 	@Override
-	protected void autoSave() {
-		if (this.autoSave) {
-			this.save();
-		}
-	}
-
-	@Override
 	public File getConfigFile() {
 		return this.configFile;
 	}
