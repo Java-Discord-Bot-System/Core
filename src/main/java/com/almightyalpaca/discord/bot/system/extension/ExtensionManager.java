@@ -21,7 +21,6 @@ import com.almightyalpaca.discord.bot.system.exception.PluginException;
 import com.almightyalpaca.discord.bot.system.plugins.Plugin;
 import com.almightyalpaca.discord.bot.system.plugins.PluginInfo;
 import com.almightyalpaca.discord.bot.system.plugins.PluginSelector;
-import com.almightyalpaca.discord.bot.system.settings.SettingsManager;
 import com.almightyalpaca.discord.bot.system.util.GCUtil;
 import com.almightyalpaca.discord.bot.system.util.URLUtils;
 import com.google.gson.JsonIOException;
@@ -39,8 +38,6 @@ public class ExtensionManager {
 	final JDA		api;
 
 	final CommandExtensionManager commandManager;
-
-	final SettingsManager settingsManager;
 
 	final File configFolder;
 
@@ -61,8 +58,6 @@ public class ExtensionManager {
 		this.rootConfig = ConfigFactory.getConfig(new File(this.configFolder, "config.json"));
 
 		MessageBuilderSettings.setNotehubPassword(this.rootConfig.getString("messages.upload.notehub.password", "Discord Bot"));
-
-		this.settingsManager = new SettingsManager(ConfigFactory.getConfig(new File(this.configFolder, "users.json")), ConfigFactory.getConfig(new File(this.configFolder, "guilds.json")));
 
 		this.commandManager = new CommandExtensionManager(this);
 
