@@ -57,7 +57,7 @@ public class ExtensionManager {
 
 		this.rootConfig = ConfigFactory.getConfig(new File(this.configFolder, "config.json"));
 
-		MessageBuilderSettings.setNotehubPassword(this.rootConfig.getString("messages.upload.notehub.password", "Discord Bot"));
+		MessageBuilderSettings.setNotehubPassword(this.rootConfig.getString("sahred.notehub.password", "Discord Bot"));
 
 		this.commandManager = new CommandExtensionManager(this);
 
@@ -84,7 +84,7 @@ public class ExtensionManager {
 	}
 
 	public Config getPluginConfig(final Plugin plugin) {
-		return this.rootConfig.getOrCreateConfig("plugins." + plugin.getPluginInfo().getName());
+		return this.rootConfig.getConfig("plugins." + plugin.getPluginInfo().getName());
 	}
 
 	public final Set<PluginExtension> getPlugins() {

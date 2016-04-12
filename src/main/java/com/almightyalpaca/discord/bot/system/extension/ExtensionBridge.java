@@ -54,7 +54,7 @@ public class ExtensionBridge {
 	}
 
 	public final Config getSharedConfig(final String key) {
-		return this.pluginExtension.extensionManager.rootConfig.getOrCreateConfig("shared." + key);
+		return this.pluginExtension.extensionManager.rootConfig.getConfig("shared." + key.replace(".", "/"));
 	}
 
 	final void initialize(final PluginExtension pluginExtension) {

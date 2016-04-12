@@ -107,18 +107,18 @@ public class Config {
 	}
 
 	public Config getConfig(final String key) throws WrongTypeException, KeyNotFoundException {
-		final JsonObject object = this.getJsonObject(key);
-		if (object == null) {
-			throw new KeyNotFoundException();
-		}
-		return new Config(this, object);
+		return this.getConfig(key, new Config(this, new JsonObject()));
 	}
 
 	public final Config getConfig(final String key, final Config defaultValue) {
+		return this.getConfig(key, defaultValue.config);
+	}
+
+	public final Config getConfig(final String key, final JsonObject defaultValue) {
 		if (!this.hasKey(key)) {
 			this.put(key, defaultValue);
 		}
-		return this.getConfig(key);
+		return new Config(this, this.getJsonObject(key));
 	}
 
 	public File getConfigFile() {
@@ -206,6 +206,9 @@ public class Config {
 		JsonElement value = this.config;
 		try {
 			for (String element : path) {
+				if (element.trim().isEmpty()) {
+					continue;
+				}
 				if (element.endsWith("]") && element.contains("[")) {
 					final int i = element.lastIndexOf("[");
 					int index;
@@ -309,10 +312,6 @@ public class Config {
 		return this.getNumber(key);
 	}
 
-	public Config getOrCreateConfig(final String key) {
-		return this.getConfig(key, new Config(this, new JsonObject()));
-	}
-
 	public short getShort(final String key) throws WrongTypeException, KeyNotFoundException {
 		try {
 			return this.getJsonPrimitive(key).getAsShort();
@@ -367,12 +366,18 @@ public class Config {
 
 	public void put(String key, final JsonElement value) throws WrongTypeException {
 		final String finalKey = key.substring(key.lastIndexOf(".") + 1);
-		key = StringUtils.replaceLast(key, "." + finalKey, "");
+		key = StringUtils.replaceLast(key, finalKey, "");
+		if (key.endsWith(".")) {
+			key = StringUtils.replaceLast(key, ".", "");
+		}
 		final String[] path = key.split("\\.");
 		JsonObject current = this.config;
 
 		try {
 			for (String element : path) {
+				if (element.trim().isEmpty()) {
+					continue;
+				}
 				if (element.endsWith("]") && element.contains("[")) {
 					final int i = element.lastIndexOf("[");
 					int index;
