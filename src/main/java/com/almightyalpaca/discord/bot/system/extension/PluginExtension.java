@@ -42,7 +42,7 @@ public class PluginExtension {
 		libs.mkdirs();
 		this.jar = new File(folder, "Plugin.jar");
 		if (!this.jar.exists()) {
-			throw new PluginException("Plugin.jar does not exist !");
+			throw new PluginException("Plugin.jar does not exist: " + folder.getName());
 		}
 
 		JarFile jarFile = new JarFile(this.jar);
@@ -88,21 +88,16 @@ public class PluginExtension {
 		jarFile.close();
 
 		if (list.size() > 1) {
-			throw new PluginException("Too many Plugin classes found!");
+			throw new PluginException("Too many Plugin classes found: " + folder.getName());
 		} else if (list.size() < 1) {
-			throw new PluginException("No Plugin class found!");
+			throw new PluginException("No Plugin class found: " + folder.getName());
 		} else {
 			this.pluginClass = list.get(0);
 			try {
 				Constructor<? extends Plugin> constructor;
-				try {
-					constructor = this.pluginClass.getConstructor();
-					constructor.setAccessible(true);
-					this.plugin = constructor.newInstance();
-				} catch (final Exception e) {
-					throw new PluginException(e);
-				}
-
+				constructor = this.pluginClass.getConstructor();
+				constructor.setAccessible(true);
+				this.plugin = constructor.newInstance();
 			} catch (final Exception e) {
 				throw new PluginException(e);
 			}

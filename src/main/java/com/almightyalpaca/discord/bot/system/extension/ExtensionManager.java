@@ -57,19 +57,31 @@ public class ExtensionManager {
 
 		this.rootConfig = ConfigFactory.getConfig(new File(this.configFolder, "config.json"));
 
-		MessageBuilderSettings.setNotehubPassword(this.rootConfig.getString("sahred.notehub.password", "Discord Bot"));
+		MessageBuilderSettings.setNotehubPassword(this.rootConfig.getString("shared.notehub.password", "Discord Bot"));
 
 		this.commandManager = new CommandExtensionManager(this);
 
 		this.eventManager = new EventManager(this);
 		this.eventManager.register(this.commandManager);
 
-		final JDABuilder builder = new JDABuilder(this.rootConfig.getString("shared.discord.email", "EMAIL"), this.rootConfig.getString("shared.discord.password", "PASSWORD"))
-			.setEventManager(this.eventManager);
+		final JDABuilder builder = new JDABuilder().setEventManager(this.eventManager);
 
-		final String proxyAdress = this.rootConfig.getString("proxy.host", "");
-		final int proxyPort = this.rootConfig.getInt("proxy.port", 8080);
-		if (this.rootConfig.getBoolean("proxy.use", false)) {
+		final String email = this.rootConfig.getString("shared.discord.user.email", "Your email");
+		final String password = this.rootConfig.getString("shared.discord.user.password", "Your password");
+		final boolean isBot = this.rootConfig.getBoolean("shared.discord.bot.use", false);
+		final String token = this.rootConfig.getString("shared.discord.bot.token", "Your token");
+
+		if (isBot) {
+			builder.setBotToken(token);
+		} else {
+			builder.setEmail(email);
+			builder.setPassword(password);
+		}
+
+		final String proxyAdress = this.rootConfig.getString("shared.proxy.host", "");
+		final int proxyPort = this.rootConfig.getInt("shared.proxy.port", 8080);
+		final boolean useProxy = this.rootConfig.getBoolean("shared.proxy.use", false);
+		if (useProxy) {
 			builder.setProxy(proxyAdress, proxyPort);
 		}
 
