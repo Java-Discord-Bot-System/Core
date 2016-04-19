@@ -66,17 +66,8 @@ public class ExtensionManager {
 
 		final JDABuilder builder = new JDABuilder().setEventManager(this.eventManager);
 
-		final String email = this.rootConfig.getString("shared.discord.user.email", "Your email");
-		final String password = this.rootConfig.getString("shared.discord.user.password", "Your password");
-		final boolean isBot = this.rootConfig.getBoolean("shared.discord.bot.use", false);
-		final String token = this.rootConfig.getString("shared.discord.bot.token", "Your token");
-
-		if (isBot) {
-			builder.setBotToken(token);
-		} else {
-			builder.setEmail(email);
-			builder.setPassword(password);
-		}
+		final String token = this.rootConfig.getString("shared.discord.token", "Your token");
+		builder.setBotToken(token);
 
 		final String proxyAdress = this.rootConfig.getString("shared.proxy.host", "");
 		final int proxyPort = this.rootConfig.getInt("shared.proxy.port", 8080);

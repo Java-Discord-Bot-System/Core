@@ -42,11 +42,6 @@ public class Handler {
 				}
 			}
 		}
-
-	}
-
-	public Object getObject() {
-		return this.object;
 	}
 
 	public void handle(final Object event) {
@@ -57,12 +52,14 @@ public class Handler {
 				} else {
 					try {
 						entry.getMiddle().invoke(this.object, event);
-					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					} catch (IllegalAccessException | IllegalArgumentException e) {
 						e.printStackTrace();
+					} catch (InvocationTargetException e) {
+						System.out.println("An eventhandler throwed an error:");
+						e.getCause().printStackTrace();
 					}
 				}
 			}
 		}
 	}
-
 }

@@ -27,7 +27,6 @@ public class BotSystem {
 		this.extensionManager.saveConfig();
 
 		GCUtil.fixedRate(60);
-
 	}
 
 	public ExtensionManager getExtensionManager() {
