@@ -54,9 +54,9 @@ public class Handler {
 						entry.getMiddle().invoke(this.object, event);
 					} catch (IllegalAccessException | IllegalArgumentException e) {
 						e.printStackTrace();
-					} catch (InvocationTargetException e) {
+					} catch (final InvocationTargetException e) {
 						System.out.println("An eventhandler throwed an error:");
-						e.getCause().printStackTrace();
+						e.printStackTrace();
 					}
 				}
 			}
