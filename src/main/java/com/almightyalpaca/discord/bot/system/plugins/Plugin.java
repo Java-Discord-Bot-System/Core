@@ -37,6 +37,10 @@ public abstract class Plugin {
 		return new File(this.bridge.getPluginFolder(), "cache");
 	}
 
+	protected File getChacheFolder() {
+		return this.bridge.getChacheFolder();
+	}
+
 	public JDA getJDA() {
 		return this.bridge.getJDA();
 	}

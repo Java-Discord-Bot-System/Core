@@ -29,6 +29,10 @@ public class ExtensionBridge {
 		this.eventHandlers = new HashSet<>();
 	}
 
+	public final File getChacheFolder() {
+		return this.pluginExtension.extensionManager.cacheFolder;
+	}
+
 	public final ExtensionClassLoader getClassLoader() {
 		return this.pluginExtension.loader;
 	}
