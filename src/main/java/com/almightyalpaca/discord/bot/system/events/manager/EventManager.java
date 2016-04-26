@@ -3,7 +3,9 @@ package com.almightyalpaca.discord.bot.system.events.manager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -70,6 +72,11 @@ public class EventManager extends EventManagerExtension implements IEventManager
 	@Override
 	public boolean unregister(final Object o) {
 		return this.handlers.remove(o) != null;
+	}
+
+	@Override
+	public List<Object> getRegisteredListeners() {
+		return Collections.emptyList();
 	}
 
 }
