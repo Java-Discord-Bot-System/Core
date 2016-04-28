@@ -10,8 +10,8 @@ public abstract class Command {
 		this.info = info;
 	}
 
-	public Command(final String name, final String description, final String help) {
-		this(new CommandInfo(name, description, help));
+	public Command(final String name, final Category category, final String description, final String help) {
+		this(new CommandInfo(name, category, description, help));
 	}
 
 	public final CommandInfo getInfo() {

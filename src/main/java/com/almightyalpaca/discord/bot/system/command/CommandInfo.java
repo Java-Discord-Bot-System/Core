@@ -5,9 +5,11 @@ public class CommandInfo {
 	private final String	name;
 	private final String	description;
 	private final String	help;
+	private final Category	category;
 
-	public CommandInfo(final String name, final String description, final String help) {
+	public CommandInfo(final String name, final Category category, final String description, final String help) {
 		this.name = name.toLowerCase().trim();
+		this.category = category;
 		this.description = description;
 		this.help = help;
 	}
@@ -23,6 +25,10 @@ public class CommandInfo {
 		} else {
 			return false;
 		}
+	}
+
+	public final Category getCategory() {
+		return this.category;
 	}
 
 	public final String getDescription() {
