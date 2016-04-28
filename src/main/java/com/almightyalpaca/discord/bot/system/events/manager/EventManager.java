@@ -45,6 +45,11 @@ public class EventManager extends EventManagerExtension implements IEventManager
 	}
 
 	@Override
+	public List<Object> getRegisteredListeners() {
+		return Collections.emptyList();
+	}
+
+	@Override
 	public void handle(final Event event) {
 		this.handle((Object) event);
 	}
@@ -72,11 +77,6 @@ public class EventManager extends EventManagerExtension implements IEventManager
 	@Override
 	public boolean unregister(final Object o) {
 		return this.handlers.remove(o) != null;
-	}
-
-	@Override
-	public List<Object> getRegisteredListeners() {
-		return Collections.emptyList();
 	}
 
 }

@@ -51,6 +51,10 @@ public class CommandEvent extends PluginEvent {
 		return this.receivedEvent.getMessage();
 	}
 
+	public final MessageReceivedEvent getMessageReceivedEvent() {
+		return this.receivedEvent;
+	}
+
 	public final String getPrefix() {
 		return this.prefix;
 	}

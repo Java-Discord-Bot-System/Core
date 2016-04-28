@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.security.auth.login.LoginException;
 
@@ -90,8 +90,16 @@ public class ExtensionManager {
 		return this.rootConfig.getConfig("plugins." + plugin.getPluginInfo().getName());
 	}
 
-	public final Set<PluginExtension> getPlugins() {
-		return Collections.unmodifiableSet(this.plugins);
+	public final Set<PluginExtension> getPluginExtensions() {
+		return new HashSet<>(this.plugins);
+	}
+
+	public final Set<PluginInfo> getPluginInfos() {
+		return this.plugins.stream().map(p -> p.plugin.getPluginInfo()).collect(Collectors.toSet());
+	}
+
+	public final Set<Plugin> getPlugins() {
+		return this.plugins.stream().map(p -> p.plugin).collect(Collectors.toSet());
 	}
 
 	public boolean isLoaded(final PluginInfo info) {

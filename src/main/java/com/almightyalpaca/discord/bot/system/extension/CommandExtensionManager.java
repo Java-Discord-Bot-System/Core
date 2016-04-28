@@ -3,13 +3,17 @@ package com.almightyalpaca.discord.bot.system.extension;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import com.almightyalpaca.discord.bot.system.command.Command;
+import com.almightyalpaca.discord.bot.system.command.CommandInfo;
 import com.almightyalpaca.discord.bot.system.events.commands.CommandEvent;
 import com.almightyalpaca.discord.bot.system.events.commands.CommandExecutionEvent;
 import com.almightyalpaca.discord.bot.system.events.commands.CommandPrefixEvent;
@@ -48,6 +52,18 @@ public class CommandExtensionManager {
 		});
 	}
 
+	public final Set<CommandExtension> getCommandExtensions() {
+		return new HashSet<>(this.commands.values());
+	}
+
+	public final Set<CommandInfo> getCommandInfos() {
+		return this.commands.values().stream().map(e -> e.command.getInfo()).collect(Collectors.toSet());
+	}
+
+	public final Set<Command> getCommands() {
+		return this.commands.values().stream().map(e -> e.command).collect(Collectors.toSet());
+	}
+
 	@EventHandler
 	private void onMessageReceived(final MessageReceivedEvent event) {
 
@@ -68,7 +84,6 @@ public class CommandExtensionManager {
 				if (!commandExecutionEvent.isCancelled()) {
 					final CommandEvent commandEvent = new CommandEvent(this.extensionManager, event, prefix);
 					commandEvent.fire();
-
 					commandExtension.execute(commandEvent);
 				}
 

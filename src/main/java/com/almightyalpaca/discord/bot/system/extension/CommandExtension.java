@@ -3,7 +3,9 @@ package com.almightyalpaca.discord.bot.system.extension;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -16,14 +18,14 @@ public class CommandExtension {
 
 	final Command command;
 
-	final List<CommandMethod> commandMethods;
+	final Set<CommandMethod> commandMethods;
 
 	final CommandExtensionManager commandManager;
 
 	public CommandExtension(final CommandExtensionManager commandManager, final Command command) {
 		this.commandManager = commandManager;
 		this.command = command;
-		this.commandMethods = new ArrayList<>();
+		this.commandMethods = new HashSet<>();
 		for (final Method method : command.getClass().getDeclaredMethods()) {
 			if (method.isAnnotationPresent(CommandHandler.class)) {
 				try {
@@ -78,6 +80,10 @@ public class CommandExtension {
 
 	public final CommandInfo getCommandInfo() {
 		return this.command.getInfo();
+	}
+
+	public final Set<CommandMethod> getCommandMethods() {
+		return new HashSet<>(this.commandMethods);
 	}
 
 }

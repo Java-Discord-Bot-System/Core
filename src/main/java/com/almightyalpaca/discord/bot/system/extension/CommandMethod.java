@@ -36,7 +36,15 @@ public class CommandMethod {
 		method.setAccessible(true);
 	}
 
-	public Triple<Integer, Method, Object[]> parse(final CommandEvent event) throws CommandSyntaxException { // TODO make handling for unknown syntax better
+	public final CommandExtension getCommandExtension() {
+		return this.commandExtension;
+	}
+
+	public final Method getMethod() {
+		return this.method;
+	}
+
+	public Triple<Integer, Method, Object[]> parse(final CommandEvent event) throws CommandSyntaxException {
 		try {
 			final Object[] arguments = new Object[this.method.getParameterTypes().length];
 			arguments[0] = event;
