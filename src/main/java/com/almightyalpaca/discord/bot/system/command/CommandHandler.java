@@ -12,12 +12,18 @@ import java.lang.annotation.Target;
 public @interface CommandHandler {
 
 	/**
-	 * Set to true if this method should be executed async.
+	 * Set to true if this method should be executed async. default is <b>false</b>.
 	 */
 	boolean async() default false;
 
+	/**
+	 * Weather this method can be executed from a pm. default is <b>true</b>.
+	 */
 	boolean dm() default true;
 
+	/**
+	 * Weather this method can be executed from a guild. default is <b>true</b>.
+	 */
 	boolean guild() default true;
 
 	/**

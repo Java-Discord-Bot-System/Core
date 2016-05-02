@@ -14,6 +14,23 @@ public abstract class Command {
 		this(new CommandInfo(name, category, description, help));
 	}
 
+	public boolean equals(final Command command) {
+		if (command == null) {
+			return false;
+		} else {
+			return this.info.equals(command.info);
+		}
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj != null && obj instanceof Command) {
+			return this.equals((Command) obj);
+		} else {
+			return false;
+		}
+	}
+
 	public final CommandInfo getInfo() {
 		return this.info;
 	}

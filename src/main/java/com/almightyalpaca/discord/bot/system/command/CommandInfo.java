@@ -15,7 +15,11 @@ public class CommandInfo {
 	}
 
 	public boolean equals(final CommandInfo info) {
-		return info.name.equalsIgnoreCase(this.name);
+		if (info == null) {
+			return false;
+		} else {
+			return this.name.equalsIgnoreCase(info.name);
+		}
 	}
 
 	@Override
