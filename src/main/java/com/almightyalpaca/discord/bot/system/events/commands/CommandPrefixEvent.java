@@ -6,26 +6,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.almightyalpaca.discord.bot.system.events.PluginEvent;
-import com.almightyalpaca.discord.bot.system.extension.ExtensionEvent;
 import com.almightyalpaca.discord.bot.system.extension.ExtensionManager;
+import com.almightyalpaca.discord.bot.system.extension.ExtensionUtils;
 import com.almightyalpaca.discord.bot.system.plugins.Plugin;
 
-import net.dv8tion.jda.entities.Guild;
+public abstract class CommandPrefixEvent extends PluginEvent {
 
-public final class CommandPrefixEvent extends PluginEvent {
+	protected final Set<String> prefixes;
 
-	private final Set<String>	prefixes;
-	private final Guild			guild;
-
-	public CommandPrefixEvent(final ExtensionManager manager, final Guild guild) {
+	public CommandPrefixEvent(final ExtensionManager manager) {
 		super(manager);
-		this.guild = guild;
 		this.prefixes = new HashSet<>();
-		this.prefixes.add(manager.getJDA().getSelfInfo().getAsMention() + " ");
 	}
 
-	public CommandPrefixEvent(final Plugin plugin, final Guild guild) {
-		this(ExtensionEvent.getExtensionManager(plugin), guild);
+	public CommandPrefixEvent(final Plugin plugin) {
+		this(ExtensionUtils.getExtensionManager(plugin));
 	}
 
 	public boolean addPrefix(final String prefix) {
@@ -38,10 +33,6 @@ public final class CommandPrefixEvent extends PluginEvent {
 
 	private void ensureMention() {
 		this.prefixes.add(this.extensionManager.getJDA().getSelfInfo().getAsMention());
-	}
-
-	public final Guild getGuild() {
-		return this.guild;
 	}
 
 	public Set<String> getPrefixes() {

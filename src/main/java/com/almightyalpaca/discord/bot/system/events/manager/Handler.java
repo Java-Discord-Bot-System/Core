@@ -1,6 +1,5 @@
 package com.almightyalpaca.discord.bot.system.events.manager;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
@@ -50,14 +49,8 @@ public class Handler {
 				if (entry.getRight()) {
 					this.eventManager.executeAsync(this.object, entry.getMiddle(), event);
 				} else {
-					try {
-						entry.getMiddle().invoke(this.object, event);
-					} catch (IllegalAccessException | IllegalArgumentException e) {
-						e.printStackTrace();
-					} catch (final InvocationTargetException e) {
-						System.out.println("An eventhandler throwed an error:");
-						e.printStackTrace();
-					}
+					this.eventManager.executeSync(this.object, entry.getMiddle(), event);
+
 				}
 			}
 		}

@@ -36,12 +36,16 @@ public class EventManager extends EventManagerExtension implements IEventManager
 
 	public void executeAsync(final Object object, final Method method, final Object event) {
 		this.executor.submit(() -> {
-			try {
-				method.invoke(object, event);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				e.printStackTrace();
-			}
+			this.executeSync(object, method, event);
 		});
+	}
+
+	public void executeSync(final Object object, final Method method, final Object event) {
+		try {
+			method.invoke(object, event);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

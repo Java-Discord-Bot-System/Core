@@ -17,6 +17,8 @@ import com.almightyalpaca.discord.bot.system.command.CommandInfo;
 import com.almightyalpaca.discord.bot.system.events.commands.CommandEvent;
 import com.almightyalpaca.discord.bot.system.events.commands.CommandExecutionEvent;
 import com.almightyalpaca.discord.bot.system.events.commands.CommandPrefixEvent;
+import com.almightyalpaca.discord.bot.system.events.commands.GuildCommandPrefixEvent;
+import com.almightyalpaca.discord.bot.system.events.commands.PrivateCommandPrefixEvent;
 import com.almightyalpaca.discord.bot.system.events.manager.EventHandler;
 
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
@@ -67,8 +69,14 @@ public class CommandExtensionManager {
 	@EventHandler
 	private void onMessageReceived(final MessageReceivedEvent event) {
 
-		final CommandPrefixEvent commandPrefixEvent = new CommandPrefixEvent(this.extensionManager, event.getGuild());
+		final CommandPrefixEvent commandPrefixEvent;
+		if (event.isPrivate()) {
+			commandPrefixEvent = new PrivateCommandPrefixEvent(this.extensionManager, event.getAuthor());
+		} else {
+			commandPrefixEvent = new GuildCommandPrefixEvent(this.extensionManager, event.getGuild());
+		}
 		commandPrefixEvent.fire();
+
 		for (final String prefix : commandPrefixEvent.getPrefixes()) {
 			if (event.getMessage().getRawContent().startsWith(prefix)) {
 

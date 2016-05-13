@@ -1,6 +1,6 @@
 package com.almightyalpaca.discord.bot.system.events;
 
-import com.almightyalpaca.discord.bot.system.extension.ExtensionEvent;
+import com.almightyalpaca.discord.bot.system.extension.ExtensionUtils;
 import com.almightyalpaca.discord.bot.system.plugins.Plugin;
 import com.almightyalpaca.discord.bot.system.plugins.PluginInfo;
 
@@ -12,7 +12,7 @@ public final class CustomEvent extends PluginEvent {
 	private Object value = null;
 
 	public CustomEvent(final Plugin plugin, final String key) {
-		super(ExtensionEvent.getExtensionManager(plugin));
+		super(ExtensionUtils.getExtensionManager(plugin));
 		this.pluginInfo = plugin.getPluginInfo();
 		this.key = key;
 	}

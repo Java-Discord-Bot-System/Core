@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class Category {
+public final class Category {
 
 	private static Map<String, Category> categories = new HashMap<>();
 

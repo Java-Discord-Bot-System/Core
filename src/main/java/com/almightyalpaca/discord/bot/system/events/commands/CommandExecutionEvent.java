@@ -1,9 +1,10 @@
 package com.almightyalpaca.discord.bot.system.events.commands;
 
 import com.almightyalpaca.discord.bot.system.command.Command;
+import com.almightyalpaca.discord.bot.system.command.CommandInfo;
 import com.almightyalpaca.discord.bot.system.events.PluginEvent;
-import com.almightyalpaca.discord.bot.system.extension.ExtensionEvent;
 import com.almightyalpaca.discord.bot.system.extension.ExtensionManager;
+import com.almightyalpaca.discord.bot.system.extension.ExtensionUtils;
 import com.almightyalpaca.discord.bot.system.plugins.Plugin;
 
 import net.dv8tion.jda.entities.Guild;
@@ -28,7 +29,7 @@ public final class CommandExecutionEvent extends PluginEvent {
 	}
 
 	public CommandExecutionEvent(final Plugin plugin, final Command command, final MessageReceivedEvent messageReceivedEvent) {
-		this(ExtensionEvent.getExtensionManager(plugin), command, messageReceivedEvent);
+		this(ExtensionUtils.getExtensionManager(plugin), command, messageReceivedEvent);
 	}
 
 	public User getAuthor() {
@@ -39,8 +40,8 @@ public final class CommandExecutionEvent extends PluginEvent {
 		return this.messageReceivedEvent.getChannel();
 	}
 
-	public String getCommandName() {
-		return this.command.getInfo().getName();
+	public CommandInfo getCommandInfo() {
+		return this.command.getInfo();
 	}
 
 	public Guild getGuild() {
