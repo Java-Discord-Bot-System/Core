@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import com.almightyalpaca.discord.bot.system.command.arguments.Arguments;
 import com.almightyalpaca.discord.bot.system.command.arguments.parsers.CommandAgumentParsers.Parser;
 
+import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.entities.Channel;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
@@ -85,6 +86,19 @@ public class JDAParsers {
 			super(User.class);
 		}
 
+		private User get(final JDA api, final String tag) {
+			System.out.println("tag: " + tag);
+			final int i = tag.lastIndexOf("#");
+			if (i != -1 && i != 0 && i != tag.length() - 1) {
+				for (final User user : api.getUsers()) {
+					if ((user.getUsername() + "#" + user.getDiscriminator()).contentEquals(tag)) {
+						return user;
+					}
+				}
+			}
+			return null;
+		}
+
 		@Override
 		public User get(final Message msg, final Arguments args) {
 			User user;
@@ -96,8 +110,33 @@ public class JDAParsers {
 			} else {
 				user = msg.getJDA().getUserById(arg.replace("<@", "").replace(">", ""));
 			}
+
+			for (final String string : args) {
+				System.out.println(string);
+			}
+
 			if (user == null) {
-				throw new NoSuchElementException();
+				int parts = -1;
+				String temp = arg;
+				while ((user = this.get(msg.getJDA(), temp)) == null) {
+					parts++;
+					if (parts == args.size()) {
+						break;
+					}
+					try {
+						temp = arg + " " + args.get(parts);
+					} catch (final Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+				if (user == null) {
+					throw new NoSuchElementException();
+				} else {
+					for (int i = 0; i <= parts; i++) {
+						args.removeNext();
+					}
+				}
 			}
 			return user;
 		}
