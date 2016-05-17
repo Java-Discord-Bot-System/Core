@@ -125,17 +125,12 @@ public class JDAParsers {
 		}
 	}
 
-	private static boolean initialized = false;
-
-	public static void init() {
-		if (!JDAParsers.initialized) {
-			JDAParsers.initialized = true;
-			CommandAgumentParsers.addParser(new JDAParsers.ChannelParser());
-			CommandAgumentParsers.addParser(new JDAParsers.GuildParser());
-			CommandAgumentParsers.addParser(new JDAParsers.TextChannelParser());
-			CommandAgumentParsers.addParser(new JDAParsers.UserParser());
-			CommandAgumentParsers.addParser(new JDAParsers.VoiceChannelParser());
-		}
+	static void init() {
+		CommandAgumentParsers.addParser(new JDAParsers.ChannelParser());
+		CommandAgumentParsers.addParser(new JDAParsers.GuildParser());
+		CommandAgumentParsers.addParser(new JDAParsers.TextChannelParser());
+		CommandAgumentParsers.addParser(new JDAParsers.UserParser());
+		CommandAgumentParsers.addParser(new JDAParsers.VoiceChannelParser());
 	}
 
 }

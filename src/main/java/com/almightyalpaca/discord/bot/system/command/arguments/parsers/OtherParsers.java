@@ -50,15 +50,11 @@ public class OtherParsers {
 		}
 	}
 
-	private static boolean initialized = false;
+	static void init() {
+		CommandAgumentParsers.addParser(new OtherParsers.BigDecimalParser());
+		CommandAgumentParsers.addParser(new OtherParsers.BigIntegerParser());
+		CommandAgumentParsers.addParser(new OtherParsers.URLParser());
 
-	public static void init() {
-		if (!OtherParsers.initialized) {
-			OtherParsers.initialized = true;
-			CommandAgumentParsers.addParser(new OtherParsers.BigDecimalParser());
-			CommandAgumentParsers.addParser(new OtherParsers.BigIntegerParser());
-			CommandAgumentParsers.addParser(new OtherParsers.URLParser());
-		}
 	}
 
 }

@@ -5,7 +5,6 @@ import java.util.Map.Entry;
 
 import com.almightyalpaca.discord.bot.system.command.arguments.Arguments;
 import com.almightyalpaca.discord.bot.system.command.arguments.ParseException;
-import com.almightyalpaca.discord.bot.system.command.arguments.special.SpecialParsers;
 
 import net.dv8tion.jda.entities.Message;
 

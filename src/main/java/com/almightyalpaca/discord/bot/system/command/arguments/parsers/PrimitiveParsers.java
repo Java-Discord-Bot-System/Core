@@ -210,30 +210,24 @@ public class PrimitiveParsers {
 		}
 	}
 
-	private static boolean initialized = false;
-
-	public static void init() {
-		if (!PrimitiveParsers.initialized) {
-			PrimitiveParsers.initialized = true;
-			CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveBooleanParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveByteParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveCharacterParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveDoubleParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveFloatParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveIntegerParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveLongParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveShortParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.BooleanParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.ByteParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.CharacterParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.DoubleParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.FloatParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.IntegerParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.LongParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.ShortParser());
-			CommandAgumentParsers.addParser(new PrimitiveParsers.StringParser());
-
-		}
+	static void init() {
+		CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveBooleanParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveByteParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveCharacterParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveDoubleParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveFloatParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveIntegerParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveLongParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.PrimitiveShortParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.BooleanParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.ByteParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.CharacterParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.DoubleParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.FloatParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.IntegerParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.LongParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.ShortParser());
+		CommandAgumentParsers.addParser(new PrimitiveParsers.StringParser());
 	}
 
 }
