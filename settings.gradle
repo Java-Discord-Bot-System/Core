@@ -1,0 +1,5 @@
+rootProject.name = 'adbs4j'
+
+include 'bootstrap'
+
+project(':bootstrap').name = 'adbs4j bootstrap'

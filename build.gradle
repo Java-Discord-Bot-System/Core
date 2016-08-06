@@ -1,41 +1,278 @@
-apply plugin: 'application'
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.apache.ant:ant:1.9.7'
+	}
+}
 
-mainClassName = "com.almightyalpaca.discord.bot.system.Main"
+plugins {
+	id 'com.jfrog.bintray' version '1.7.1'
+	id 'java'
+	id 'maven'
+	id 'com.github.ben-manes.versions' version '0.13.0'
+}
+
+
+group = "com.almightyalpaca"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava.options.encoding = 'UTF-8'
+
+task getVersion {
+	version = ''
+	try {
+		def stdout = new ByteArrayOutputStream()
+		exec {
+			commandLine 'git', 'describe', '--tags'
+			standardOutput = stdout
+		}
+			version += stdout.toString().trim()
+	}
+	catch (ignored) {
+		version += 'unknown';
+	}
+	
+	version += '_';
+	
+	try {
+		def stdout = new ByteArrayOutputStream()
+		exec {
+			commandLine 'git', 'rev-list', '--first-parent', '--count', 'master'
+			standardOutput = stdout
+		}
+		version += Integer.parseInt(stdout.toString().trim())
+	}
+	catch (ignored) {
+		version += -1;
+	}
+	
+	doLast {
+		println version
+	}
+}
+
+repositories {
+	mavenCentral()
+	jcenter()
+}
 
 dependencies {
+	
 	// JDA
-	compile project(":JDA")
-	//{
-	//	exclude group: 'junit', module: 'junit'
-	//}
+	compile(group: 'net.dv8tion', name: 'JDA', version: '2.2.0_345') {
+		// I don't want all the audio libs currectly. They are just a waste of space.
+		// This breaks URLPlayer and FilePlayer but JDA-Player will still work.
+		exclude group: 'junit', module: 'junit'
+		exclude group: 'jflac', module: 'jflac'
+		exclude group: 'net.sourceforge.jaadec', module: 'jaad'
+		exclude group: 'org.tritonus', module: 'tritonus-dsp'
+		exclude group: 'com.googlecode.soundlibs', module: 'tritonus-share'
+		exclude group: 'com.googlecode.soundlibs', module: 'mp3spi'
+	}
+	
+	// JOrbis
+	// Also not, same reason
+	// compile group: 'com.googlecode.soundlibs', name: 'jorbis', version: '0.0.17-3'
+	
+	// Updated version of jda's dependencies
+	compile group: 'org.json', name: 'json', version: '20160212'
+	compile group: 'net.java.dev.jna', name: 'jna', version: '4.2.2'
+	compile group: 'com.neovisionaries', name: 'nv-websocket-client', version: '1.29'
+	compile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
+	
 	
 	// Zip4J
-	compile 'net.lingala.zip4j:zip4j:1.3.2'
+	compile group: 'net.lingala.zip4j', name: 'zip4j', version: '1.3.2'
+	
 	// Commons-IO
-	compile 'commons-io:commons-io:2.4' 
-	// JOrbis
-	compile 'com.googlecode.soundlibs:jorbis:0.0.17-2'
+	compile group: 'commons-io', name: 'commons-io', version: '2.5'
+	
 	// Guava
-	compile 'com.google.guava:guava:19.0'
-	// Jsoup
-	compile 'org.jsoup:jsoup:1.8.3'
-
-	testCompile 'junit:junit:4.12'
+	compile group: 'com.google.guava', name: 'guava', version: '19.0'
+	
+	// Commons Collections
+	compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+	
+	// SLF4J
+	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
+	
+	// Lettuce
+	compile group: 'biz.paluch.redis', name: 'lettuce', version: '4.2.1.Final'
+	
+	
+	// JUnit for testing
+	testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-task exportDependencies(type: Copy, overwrite: true) {
-	dependsOn build
-	File directory = new File(projectDir.parentFile, "export/lib/")
-	directory.mkdirs()
-	into directory
-	from (configurations.runtime - project(":JDA").configurations.runtime)
+bintray {
+	user = getProjectProperty('BINTRAY_USER')
+	key = getProjectProperty('BINTRAY_KEY')
+	publish = true
+	pkg {
+		repo = 'maven'
+		name = 'adbs4j'
+		licenses = ['Apache-2.0']
+		vcsUrl = 'https://github.com/adbs4j/adbs4j.git'
+		
+		filesSpec {
+			from( 'build/libs' ) {
+				exclude 'adbs4j-bootstrap.jar'
+			}
+			from 'build/poms'
+			
+			into "${project.group.replace(".", "/")}/${archivesBaseName}/${project.version}"
+			
+			rename { String fileName ->
+				fileName.replace("pom-default.xml", "${project.archivesBaseName}-${project.version}.pom")
+			}
+		}
+		
+		version {
+			name = project.version
+			released  = new Date()
+		}
+	}
 }
 
-task export (type: Copy, overwrite: true) {
-	dependsOn build, exportDependencies 
-	File directory = new File(projectDir.parentFile, "export/")
-	into directory
-	from (project.jar.outputs.files.files) {
-		rename {"Bot System.jar"}
+javadoc {
+	failOnError = false
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+artifacts {
+	archives sourcesJar
+	archives javadocJar
+}
+
+task wrapper(type: Wrapper) { // This task is to specify the gradle version
+	gradleVersion = '3.0-milestone-2'
+}
+
+task checksums {
+	dependsOn jar
+	dependsOn javadocJar
+	dependsOn sourcesJar
+	dependsOn install
+	
+	doLast {
+		List<CheckSum> checksums = []
+		project.configurations.getByName('archives').artifacts.each { artifact ->
+			project.ant.checksum(file: artifact.file, algorithm: 'md5', todir: artifact.file.parent)
+			project.ant.checksum(file: artifact.file, algorithm: 'sha1', todir: artifact.file.parent)
+			checksums.add(new CheckSum(artifact.name, '${artifact.extension}.md5', artifact.type, new File('$project.buildDir/libs/${artifact.file.name}.md5')))
+			checksums.add(new CheckSum(artifact.name, '${artifact.extension}.sha1', artifact.type, new File('$project.buildDir/libs/${artifact.file.name}.sha1')))
+		}
+		checksums.each { checksum ->
+			project.artifacts.add('archives', checksum)
+		}
+		
+	 	def file = file('build/poms/pom-default.xml')
+	 	project.ant.checksum(file: file, algorithm: 'md5', todir: file.parent)
+	 	project.ant.checksum(file: file, algorithm: 'sha1', todir: file.parent)
+	}
+}
+
+bintrayUpload.dependsOn checksums
+
+bintrayUpload.onlyIf { (getProjectProperty('BINTRAY_USER') != null && getProjectProperty('BINTRAY_KEY') != null) }
+
+String getProjectProperty(String propertyName)
+{
+	return project.hasProperty(propertyName) ? project.property(propertyName) : System.getenv(propertyName)
+}
+
+task dependencyList << {
+	File file = file('build/bot/dependencies.txt')
+	file.getParentFile().mkdirs()
+	file.delete();
+	file.createNewFile()
+	Writer w = new OutputStreamWriter(new FileOutputStream(file))
+	project.configurations.compile.getIncoming().getResolutionResult().getAllComponents().each { String id = it.getId().toString(); if (!id.contains(' ')) {w.write(id+'\n')} }
+	w.close();
+}
+
+task repositoryList << {
+	File file = file('build/bot/repositories.txt')
+	file.getParentFile().mkdirs()
+	file.delete();
+	file.createNewFile()
+	Writer w = new OutputStreamWriter(new FileOutputStream(file))
+	project.repositories.each { w.write(it.url.toString() + '\n') }
+	w.close();
+}
+
+task jenkinsBuild(type: Copy) {
+	evaluationDependsOn(':adbs4j bootstrap')
+	
+	dependsOn checksums
+	
+	dependsOn project(':adbs4j bootstrap').shadowJar
+	
+	dependsOn dependencyList
+	dependsOn repositoryList
+	
+	from 'bootstrap/build/libs'
+	into 'build/libs'
+}
+
+class CheckSum implements PublishArtifact {
+	String name;
+	String extension;
+	String type;
+	File file;
+	
+	CheckSum(String name, String extension, String type, File file) {
+		this.name = name
+		this.extension = extension
+		this.type = type
+		this.file = file
+	}
+	
+	@Override
+	String getName() {
+	  return name
+	}
+	
+	@Override
+	String getExtension() {
+		return extension
+	}
+	
+	@Override
+	String getType() {
+		return type
+	}
+	
+	@Override
+	String getClassifier() {
+		return null
+	}
+	
+	@Override
+	File getFile() {
+		return file
+	}
+	
+	@Override
+	Date getDate() {
+		return new Date()
+	}
+	
+	@Override
+	TaskDependency getBuildDependencies() {
+		return null
 	}
 }

@@ -1,2 +1,1 @@
-# Core
-The Bot System's Core
+# adbs4j (Advanced Discord Bot System for Java)

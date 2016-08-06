@@ -1,5 +1,5 @@
 
-# Created by https://www.gitignore.io/api/windows,osx,linux,eclipse,intellij,java,maven,gradle
+# Created by https://www.gitignore.io/api/windows,osx,linux,eclipse,intellij,java,gradle
 
 ### Windows ###
 # Windows image file caches
@@ -181,19 +181,6 @@ fabric.properties
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-
-### Maven ###
-target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-
-
 ### Gradle ###
 .gradle
 build/
@@ -209,3 +196,13 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+
+### Project ###
+/cache/
+/plugins/
+
+# Config file for Redis connection
+/config.json
+
+# Contains private keys for build process
+/gradle.properties
