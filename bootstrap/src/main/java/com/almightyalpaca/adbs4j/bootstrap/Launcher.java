@@ -70,6 +70,13 @@ public class Launcher {
 
 		final Process process = builder.start();
 
+		final Thread hook = new Thread(() -> {
+			System.out.println("Bootstrap has been requested to close! Trying to shutdown the bot...");
+			process.destroy();
+		}, "Shutdown hook");
+
+		Runtime.getRuntime().addShutdownHook(hook);
+
 		while (process.isAlive()) {
 			try {
 				process.waitFor();
@@ -78,8 +85,9 @@ public class Launcher {
 			}
 		}
 
-		this.bootstrap.onExit(Code.get(process.exitValue()));
+		Runtime.getRuntime().removeShutdownHook(hook);
 
+		this.bootstrap.onExit(Code.get(process.exitValue()));
 	}
 
 	public void launchLatest(final Code previousExitCode) throws IOException {

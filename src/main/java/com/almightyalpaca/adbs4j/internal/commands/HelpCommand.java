@@ -21,7 +21,6 @@ public abstract class HelpCommand extends Command {
 
 	@CommandHandler
 	public void onCommand(final CommandEvent event, final String name) {
-		System.out.println(name);
 		final CommandExtension commandExtension = this.manager.commands.get(name);
 
 		final Command command = commandExtension.getCommand();

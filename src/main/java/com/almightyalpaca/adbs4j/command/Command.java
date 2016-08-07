@@ -46,13 +46,11 @@ public abstract class Command {
 	public final boolean canExecute(final BotPermissionManager manager, final MessageChannel channel, final User user) {
 		for (final BotPermission permission : this.permissions) {
 			if (!permission.isSatisfied(manager, channel, user)) {
-				System.out.println("DENIED");
 				return false;
 			}
 		}
 		for (final BotRateLimit rateLimit : this.rateLimits) {
 			if (rateLimit.isLimited(manager, channel, user)) {
-				System.out.println("RATELIMITED");
 				return false;
 			}
 		}
