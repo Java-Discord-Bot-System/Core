@@ -1,11 +1,13 @@
 package com.almightyalpaca.adbs4j.bootstrap;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import com.almightyalpaca.adbs4j.bootstrap.updater.Dependency;
 import com.almightyalpaca.adbs4j.bootstrap.updater.Updater;
 
 public class Launcher {
@@ -21,25 +23,13 @@ public class Launcher {
 	}
 
 	public void launch(final Code previousExitCode, final String version) throws IOException {
+		System.out.println("Launching version " + version + " ...");
 		final ProcessBuilder builder = new ProcessBuilder();
 		builder.directory(this.bootstrap.getWorkingDirectory());
 
 		final List<String> command = new ArrayList<>();
 
-		command.add(System.getProperty("java.home"));
-		command.add("-cp");
-
-		final File[] jars = Arrays.stream(new File(this.bootstrap.getWorkingDirectory(), "bin/" + version + "/").listFiles()).filter(f -> f.isFile()).toArray(value -> new File[value]);
-
-		final StringBuilder sBuilder = new StringBuilder();
-		for (int i = 0; i < jars.length - 1; i++) {
-			sBuilder.append(jars[i].getAbsolutePath()).append(';');
-		}
-		sBuilder.append(jars[jars.length - 1].getAbsolutePath());
-
-		command.add(sBuilder.toString());
-
-		command.add("com.almightyalpaca.adbs4j.System");
+		command.add(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java");
 
 		command.add("-Djava.io.tmpdir=" + new File(this.bootstrap.getWorkingDirectory(), "cache/").getAbsolutePath());
 		command.add("-Djuser.dir=" + this.bootstrap.getWorkingDirectory().getAbsolutePath());
@@ -48,6 +38,31 @@ public class Launcher {
 		command.add("-Dbot.plugindir=" + new File(this.bootstrap.getWorkingDirectory(), "plugins/").getAbsolutePath());
 
 		command.add("-Dbot.previousExitCode=" + previousExitCode.getCode());
+
+		command.add("-cp");
+
+		final File versionFile = new File(this.bootstrap.getWorkingDirectory(), "libs/" + version + ".version");
+
+		final BufferedReader dependenciesReader = new BufferedReader(new FileReader(versionFile));
+
+		String line;
+
+		final StringBuilder sBuilder = new StringBuilder();
+
+		while ((line = dependenciesReader.readLine()) != null) {
+			if (!line.isEmpty()) {
+				final Dependency d = Dependency.ofId(line);
+				final File dependencyFile = new File(this.bootstrap.getWorkingDirectory(), "libs/" + d.getAsPath());
+				sBuilder.append(dependencyFile.getAbsolutePath()).append(';');
+			}
+		}
+		sBuilder.deleteCharAt(sBuilder.length() - 1);
+
+		dependenciesReader.close();
+
+		command.add(sBuilder.toString());
+
+		command.add("com.almightyalpaca.adbs4j.System");
 
 		builder.command(command);
 
@@ -81,7 +96,7 @@ public class Launcher {
 			version = updater.getLatestVersion();
 
 		} else {
-			version = file.getName();
+			version = file.getName().replace(".version", "");
 		}
 		this.launch(previousExitCode, version);
 	}

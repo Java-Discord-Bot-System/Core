@@ -15,8 +15,7 @@ public class Repository {
 	public InputStream get(final Dependency dependency) {
 
 		try {
-			final URL url = new URL(this.baseURL, '/' + dependency.getGroup().replace('.', '/') + '/' + dependency.getArtifactId() + '/' + dependency.getVersion() + '/' + dependency.getArtifactId()
-					+ '-' + dependency.getVersion() + ".jar");
+			final URL url = new URL(this.baseURL, dependency.getAsPath());
 
 			final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -35,11 +34,14 @@ public class Repository {
 		return null;
 	}
 
+	public final URL getURL() {
+		return this.baseURL;
+	}
+
 	public boolean has(final Dependency dependency) {
 
 		try {
-			final URL url = new URL(this.baseURL, '/' + dependency.getGroup().replace('.', '/') + '/' + dependency.getArtifactId() + '/' + dependency.getVersion() + '/' + dependency.getArtifactId()
-					+ '-' + dependency.getVersion() + ".jar");
+			final URL url = new URL(this.baseURL, '/' + dependency.getAsPath());
 
 			final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 

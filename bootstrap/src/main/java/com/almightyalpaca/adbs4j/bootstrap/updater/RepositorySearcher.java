@@ -18,12 +18,16 @@ public class RepositorySearcher {
 	}
 
 	public InputStream get(final Dependency dependency) {
+		System.out.println("Searching " + dependency.getAsId() + " ...");
 		for (final Repository repository : this.repositories) {
+			System.out.println("In " + repository.getURL() + " ...");
 			final InputStream stream = repository.get(dependency);
 			if (stream != null) {
+				System.out.println("Found!");
 				return stream;
 			}
 		}
+		System.out.println("Not found!");
 		return null;
 	}
 

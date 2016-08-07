@@ -200,9 +200,14 @@ gradle-app.setting
 ### Project ###
 /cache/
 /plugins/
+/libs/
+/bootstrap/cache/
+/bootstrap/plugins/
+/bootstrap/libs/
 
 # Config file for Redis connection
 /config.json
+/bootstrap/config.json
 
 # Contains private keys for build process
 /gradle.properties

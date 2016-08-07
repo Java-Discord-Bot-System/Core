@@ -1,20 +1,27 @@
 package com.almightyalpaca.adbs4j.bootstrap;
 
-import com.almightyalpaca.adbs4j.bootstrap.exithandler.*;
+import com.almightyalpaca.adbs4j.bootstrap.exithandler.ErrorHandler;
+import com.almightyalpaca.adbs4j.bootstrap.exithandler.IExitHandler;
+import com.almightyalpaca.adbs4j.bootstrap.exithandler.RestartHandler;
+import com.almightyalpaca.adbs4j.bootstrap.exithandler.UpdateHandler;
 
 public enum Code {
-	UNKNOWN(-2, new UnknownHandler()),
+	UNKNOWN(-2, bootstrap -> System.out.println("UNKNOWN exit value received. Maybe the process was killed? Won't restart!")) {},
+
 	FIRST_START(-1, null),
-	SHUTDOWN(100, new ShutdownHandler()),
-	RESTART(101, new RestartHandler()),
-	ERROR(102, new ErrorHandler()),
-	UPDATE(102, new UpdateHandler());
 
-	private final int					code;
+	SHUTDOWN(20, bootstrap -> System.out.println("SHUTDOWN exit value received. Won't restart!")),
+	RESTART(21, new RestartHandler()),
+	UPDATE(22, new UpdateHandler()),
 
-	private final AbstractExitHandler	handler;
+	ERROR_RESTART(30, new ErrorHandler()),
+	ERROR_DO_NOT_RESTART(31, bootstrap -> System.out.println("ERROR_DO_NOT_RESTART exit value received. Won't restart!"));
 
-	private Code(final int code, final AbstractExitHandler handler) {
+	private final int			code;
+
+	private final IExitHandler	handler;
+
+	private Code(final int code, final IExitHandler handler) {
 		this.code = code;
 		this.handler = handler;
 	}
@@ -32,7 +39,7 @@ public enum Code {
 		return this.code;
 	}
 
-	public final AbstractExitHandler getHandler() {
+	public final IExitHandler getHandler() {
 		return this.handler;
 	}
 

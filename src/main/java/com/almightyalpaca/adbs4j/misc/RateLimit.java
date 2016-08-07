@@ -14,7 +14,6 @@ public class RateLimit {
 	public RateLimit(final int times, final long period, final TimeUnit unit) {
 		this.times = times;
 		this.period = unit.toMillis(period);
-
 		this.queue = new CircularFifoQueue<>(times);
 	}
 

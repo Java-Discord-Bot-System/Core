@@ -11,7 +11,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 import com.almightyalpaca.adbs4j.exception.PluginException;
 import com.almightyalpaca.adbs4j.exception.PluginLoadingException;
@@ -38,36 +37,40 @@ public class PluginExtension {
 	final Class<? extends Plugin>	pluginClass;
 
 	@SuppressWarnings("unchecked")
-	public PluginExtension(final ExtensionManager extensionManager, final File file) throws PluginException, IOException, PluginLoadingException {
+	public PluginExtension(final ExtensionManager extensionManager, final String name) throws PluginException, IOException, PluginLoadingException {
 		this.extensionManager = extensionManager;
-		if (file.exists()) {
-			if (file.isDirectory()) {
-				this.folder = file;
-			} else if (FilenameUtils.getExtension(file.getName()).equalsIgnoreCase("zip")) {
-				this.folder = new File(file.getParent(), FilenameUtils.getBaseName(file.getName()));
-				try {
-					final ZipFile zipFile = new ZipFile(file);
-					if (this.folder.exists()) {
+		this.folder = new File(this.extensionManager.getPluginDir(), name);
+
+		final File updateFile = new File(this.extensionManager.getPluginDir(), name + ".zip");
+
+		if (updateFile.exists()) {
+			try {
+				final ZipFile zipFile = new ZipFile(updateFile);
+				if (this.folder.exists()) {
+					try {
 						FileUtils.deleteDirectory(this.folder);
+					} catch (final IOException e) {
+						throw new PluginException("Error while deleting " + this.folder.getName(), e);
 					}
-					zipFile.extractAll(this.folder.getAbsolutePath());
-					file.delete();
-				} catch (final ZipException e) {
-					throw new PluginException("Error while extracting " + file.getName(), e);
 				}
-			} else {
-				throw new PluginException("Wong file type: " + file.getName() + ": is not a zip file");
+				zipFile.extractAll(this.folder.getAbsolutePath());
+			} catch (final ZipException e) {
+				throw new PluginException("Error while extracting " + updateFile.getName(), e);
 			}
-		} else {
-			throw new PluginException("Unknown" + (file.isFile() ? "file" : "folder") + ": " + file.getAbsolutePath());
+			updateFile.delete();
 		}
 
-		final File libs = new File(this.folder, "libs");
-		libs.mkdirs();
+		if (!this.folder.exists()) {
+			throw new PluginException("Plugin " + name + "not found!");
+		}
+
 		this.jar = new File(this.folder, "Plugin.jar");
 		if (!this.jar.exists()) {
 			throw new PluginException("Plugin.jar does not exist: " + this.folder.getName());
 		}
+
+		final File libs = new File(this.folder, "libs");
+		libs.mkdirs();
 
 		final JarFile jarFile = new JarFile(this.jar);
 		final List<URL> urls = new ArrayList<>();

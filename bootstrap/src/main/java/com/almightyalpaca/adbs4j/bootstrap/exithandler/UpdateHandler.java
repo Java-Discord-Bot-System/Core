@@ -4,12 +4,12 @@ import com.almightyalpaca.adbs4j.bootstrap.Bootstrap;
 import com.almightyalpaca.adbs4j.bootstrap.Code;
 import com.almightyalpaca.adbs4j.bootstrap.updater.Updater;
 
-public class UpdateHandler extends AbstractExitHandler {
+public class UpdateHandler implements IExitHandler {
 
 	@Override
 	public void handle(final Bootstrap bootstrap) {
 		try {
-			System.out.println("Update exit value received. Searching for updates...");
+			System.out.println("UPDATE exit value received. Searching for updates...");
 
 			final Updater updater = new Updater(bootstrap);
 

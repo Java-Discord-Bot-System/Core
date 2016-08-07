@@ -4,14 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.security.auth.login.LoginException;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 
@@ -44,6 +47,7 @@ public class ExtensionManager {
 
 	final File						cacheDir;
 	final File						rootDir;
+	final File						pluginDir;
 
 	final RedisStorageProvider		storageProvider;
 
@@ -51,16 +55,24 @@ public class ExtensionManager {
 
 	private final ExitCode			previousExitCode;
 
+	private final AtomicBoolean		shutdown;
+
 	public ExtensionManager() throws Exception {
 		try {
+			this.shutdown = new AtomicBoolean(false);
+
 			this.previousExitCode = ExitCode.get(Integer.parseInt(System.getProperty("bot.previousExitCode")));
 
 			this.rootDir = new File(System.getProperty("user.dir"));
+			this.rootDir.mkdirs();
 
 			this.plugins = Sets.newConcurrentHashSet();
 
 			this.cacheDir = new File(System.getProperty("bot.cachedir"));
 			this.cacheDir.mkdirs();
+
+			this.pluginDir = new File(System.getProperty("bot.plugindir"));
+			this.pluginDir.mkdirs();
 
 			final File configFile = new File(System.getProperty("bot.configfile"));
 			if (!configFile.exists()) {
@@ -114,10 +126,10 @@ public class ExtensionManager {
 
 			this.botPermissionManager = new BotPermissionManager(this);
 
-			this.loadPlugins(new File(System.getProperty("bot.plugindir")));
+			this.loadPlugins();
 
 		} catch (final Exception e) {
-			this.shutdown(ExitCode.ERROR);
+			this.shutdown(ExitCode.ERROR_DO_NOT_RESTART);
 			throw e;
 		}
 	}
@@ -132,6 +144,10 @@ public class ExtensionManager {
 
 	public JDA getJDA() {
 		return this.api;
+	}
+
+	public final File getPluginDir() {
+		return this.pluginDir;
 	}
 
 	public final Set<PluginExtension> getPluginExtensions() {
@@ -171,10 +187,10 @@ public class ExtensionManager {
 		return false;
 	}
 
-	public void loadPlugin(final File plugin) {
+	public void loadPlugin(final String name) {
 		PluginExtension extension = null;
 		try {
-			extension = new PluginExtension(this, plugin);
+			extension = new PluginExtension(this, name);
 			if (!this.isLoaded(extension.plugin.getPluginInfo())) {
 				extension.load();
 				this.plugins.add(extension);
@@ -190,62 +206,56 @@ public class ExtensionManager {
 		}
 	}
 
-	public void loadPlugins(final File pluginDir) {
-		if (pluginDir == null || !pluginDir.exists() || !pluginDir.isDirectory()) {
-			throw new IllegalArgumentException("Invalid folder");
-		}
-		for (final File file : pluginDir.listFiles()) {
-			if (!(file.isDirectory() && new File(pluginDir, file.getName() + ".zip").exists())) {
-				this.loadPlugin(file);
-			}
-		}
+	public void loadPlugins() {
+		Arrays.stream(this.pluginDir.listFiles()).map(f -> f.isDirectory() ? f.getName() : FilenameUtils.getBaseName(f.getName())).distinct().forEach(s -> this.loadPlugin(s));
 	}
 
 	public void shutdown(final ExitCode code) {
-		final Thread t = new Thread(() -> {
-			if (this.plugins != null) {
-				ExtensionManager.this.unloadPlugins();
-			}
-			if (ExtensionManager.this.commandManager != null) {
-				ExtensionManager.this.commandManager.shutdown();
-			}
-			if (ExtensionManager.this.eventManager != null) {
-				ExtensionManager.this.eventManager.shutdown();
-			}
-			if (ExtensionManager.this.api != null) {
-				ExtensionManager.this.api.shutdown();
-			}
-			if (ExtensionManager.this.storageProvider != null) {
-				ExtensionManager.this.storageProvider.shutdown();
-			}
+		if (!this.shutdown.getAndSet(true)) {
+			new Thread(() -> {
+				if (this.plugins != null) {
+					ExtensionManager.this.unloadPlugins();
+				}
+				if (ExtensionManager.this.commandManager != null) {
+					ExtensionManager.this.commandManager.shutdown();
+				}
+				if (ExtensionManager.this.eventManager != null) {
+					ExtensionManager.this.eventManager.shutdown();
+				}
+				if (ExtensionManager.this.api != null) {
+					ExtensionManager.this.api.shutdown();
+				}
+				if (ExtensionManager.this.storageProvider != null) {
+					ExtensionManager.this.storageProvider.shutdown();
+				}
 
-			final long time = System.currentTimeMillis();
+				final long time = System.currentTimeMillis();
 
-			for (final Thread thread : Thread.getAllStackTraces().keySet()) {
-				if (!thread.isDaemon() && thread != Thread.currentThread()) {
-					final long joinTime = time + 10000 - System.currentTimeMillis();
-					if (joinTime > 0) {
-						try {
-							thread.join(joinTime);
-						} catch (final InterruptedException e) {
-							e.printStackTrace();
+				for (final Thread thread : Thread.getAllStackTraces().keySet()) {
+					if (!thread.isDaemon() && thread != Thread.currentThread() && !thread.getName().equals("DestroyJavaVM")) {
+						System.out.println(thread.getName() + "    " + thread.isDaemon());
+						final long joinTime = time + 10000 - System.currentTimeMillis();
+						if (joinTime > 0) {
+							try {
+								thread.join(joinTime);
+							} catch (final InterruptedException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
-			}
 
-			for (final Thread thread : Thread.getAllStackTraces().keySet()) {
-				if (!thread.isDaemon() && thread != Thread.currentThread()) {
-					System.out.println("Thread \"" + thread.getName() + "\" is still running.");
-					System.out.println("Terminating now.");
+				for (final Thread thread : Thread.getAllStackTraces().keySet()) {
+					if (!thread.isDaemon() && thread != Thread.currentThread() && !thread.getName().equals("DestroyJavaVM")) {
+						System.out.println("Thread \"" + thread.getName() + "\" is still running.");
+						System.out.println("Terminating now.");
+					}
 				}
-			}
 
-			System.exit(code.getCode());
+				System.exit(code.getCode());
 
-		});
-		t.setName("Shutdown Thread");
-		t.start();
+			}, "Shutdown Thread").start();
+		}
 	}
 
 	public void unloadPlugin(final Class<? extends Plugin> clazz) {

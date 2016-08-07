@@ -2,11 +2,15 @@ package com.almightyalpaca.adbs4j;
 
 public enum ExitCode {
 	UNKNOWN(-2),
+
 	FIRST_START(-1),
-	SHUTDOWN(100),
-	RESTART(101),
-	ERROR(102),
-	UPDATE(102);
+
+	SHUTDOWN(20),
+	RESTART(21),
+	UPDATE(22),
+
+	ERROR_RESTART(30),
+	ERROR_DO_NOT_RESTART(31);
 
 	private final int code;
 

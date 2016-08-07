@@ -30,8 +30,9 @@ public class Bootstrap {
 	}
 
 	public File getLatestVersion() {
-		return Arrays.stream(new File(this.workingDirectory, "bin/").listFiles()).filter(f -> f.isDirectory()).filter(f -> {
-			final Matcher m = Bootstrap.versionPattern.matcher(f.getName());
+		final File[] files = new File(this.workingDirectory, "libs/").listFiles();
+		return files == null ? null : Arrays.stream(files).filter(f -> f.isFile()).filter(f -> {
+			final Matcher m = Bootstrap.versionPattern.matcher(f.getName().replace(".version", ""));
 			return m.matches();
 		}).max((f1, f2) -> {
 			final Matcher m1 = Bootstrap.versionPattern.matcher(f1.getName());

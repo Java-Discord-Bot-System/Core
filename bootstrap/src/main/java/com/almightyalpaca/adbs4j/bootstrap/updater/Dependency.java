@@ -23,6 +23,11 @@ public class Dependency {
 				.toString();
 	}
 
+	public String getAsPath() {
+		return new StringBuilder(this.group.length() + this.artifactId.length() * 2 + this.version.length() * 2 + 8).append(this.group.replace('.', '/')).append('/').append(this.artifactId).append(
+				'/').append(this.version).append('/').append(this.artifactId).append('-').append(this.version).append(".jar").toString();
+	}
+
 	public final String getGroup() {
 		return this.group;
 	}

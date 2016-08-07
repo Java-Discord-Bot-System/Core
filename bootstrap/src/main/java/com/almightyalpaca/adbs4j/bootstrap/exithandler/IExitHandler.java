@@ -2,7 +2,8 @@ package com.almightyalpaca.adbs4j.bootstrap.exithandler;
 
 import com.almightyalpaca.adbs4j.bootstrap.Bootstrap;
 
-public abstract class AbstractExitHandler {
+@FunctionalInterface
+public interface IExitHandler {
 
-	public abstract void handle(Bootstrap bootstrap) throws Exception;
+	public void handle(Bootstrap bootstrap) throws Exception;
 }
