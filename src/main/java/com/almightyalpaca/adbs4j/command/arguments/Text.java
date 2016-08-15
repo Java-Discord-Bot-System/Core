@@ -1,13 +1,13 @@
-package com.almightyalpaca.adbs4j.command.arguments.parsers;
+package com.almightyalpaca.adbs4j.command.arguments;
 
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-public class Rest implements CharSequence {
+public class Text implements CharSequence {
 
 	private final String text;
 
-	public Rest(final String text) {
+	public Text(final String text) {
 		this.text = Objects.requireNonNull(text);
 	}
 
@@ -22,8 +22,8 @@ public class Rest implements CharSequence {
 	}
 
 	@Override
-	public Rest clone() {
-		return new Rest(this.text);
+	public Text clone() {
+		return new Text(this.text);
 	}
 
 	@Override
@@ -33,10 +33,10 @@ public class Rest implements CharSequence {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (!(obj instanceof Rest)) {
+		if (!(obj instanceof Text)) {
 			return false;
 		} else {
-			return this.text.equals(((Rest) obj).text);
+			return this.text.equals(((Text) obj).text);
 		}
 	}
 

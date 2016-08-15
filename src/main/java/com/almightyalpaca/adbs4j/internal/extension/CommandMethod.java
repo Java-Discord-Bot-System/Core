@@ -1,5 +1,6 @@
 package com.almightyalpaca.adbs4j.internal.extension;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +10,7 @@ import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 
 import com.almightyalpaca.adbs4j.command.CommandHandler;
-import com.almightyalpaca.adbs4j.command.arguments.parsers.CommandAgumentParsers;
+import com.almightyalpaca.adbs4j.command.arguments.CommandAgumentParsers;
 import com.almightyalpaca.adbs4j.events.commands.CommandEvent;
 import com.almightyalpaca.adbs4j.internal.CommandBuffer;
 
@@ -61,17 +62,19 @@ public class CommandMethod {
 
 			final Class<?>[] parameters = this.method.getParameterTypes();
 
+			final Annotation[][] annotations = this.method.getParameterAnnotations();
+
 			for (int i = 1; i < parameters.length; i++) {
 				if (buffer.isEmpty()) {
 					throw new CommandSyntaxException();
 				}
 				final Class<?> clazz = parameters[i];
-				arguments.add(CommandAgumentParsers.getParser(clazz).get(event.getMessage(), buffer));
+				arguments.add(CommandAgumentParsers.getParser(clazz).get(event.getMessage(), buffer, annotations[i]));
 			}
 			if (this.method.isVarArgs()) {
 				final Class<?> clazz = parameters[parameters.length - 1];
 				while (!buffer.isEmpty()) {
-					arguments.add(CommandAgumentParsers.getParser(clazz).get(event.getMessage(), buffer));
+					arguments.add(CommandAgumentParsers.getParser(clazz).get(event.getMessage(), buffer, annotations[annotations.length - 1]));
 				}
 			}
 			if (!buffer.isEmpty()) {

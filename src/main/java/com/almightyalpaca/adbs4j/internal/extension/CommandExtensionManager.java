@@ -116,7 +116,6 @@ public class CommandExtensionManager {
 		if (!event.getAuthor().isBot() && !event.getAuthor().equals(event.getJDA().getSelfInfo())) {
 			final List<String> prefixes = this.getPrefix(event);
 			if (prefixes != null) {
-
 				String commandWithoutPrefix = null;
 				String commandName = null;
 				CommandExtension commandExtension = null;
@@ -136,8 +135,8 @@ public class CommandExtensionManager {
 					commandExecutionEvent.fire();
 					if (!commandExecutionEvent.isCancelled()) {
 						final CommandEvent commandEvent = new CommandEvent(this.extensionManager, event, prefix);
-						commandEvent.fire();
 						commandExtension.execute(commandEvent);
+						commandEvent.fire();
 					}
 				}
 			}

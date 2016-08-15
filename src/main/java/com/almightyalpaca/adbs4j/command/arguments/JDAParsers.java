@@ -1,8 +1,9 @@
-package com.almightyalpaca.adbs4j.command.arguments.parsers;
+package com.almightyalpaca.adbs4j.command.arguments;
 
+import java.lang.annotation.Annotation;
 import java.util.NoSuchElementException;
 
-import com.almightyalpaca.adbs4j.command.arguments.parsers.CommandAgumentParsers.Parser;
+import com.almightyalpaca.adbs4j.command.arguments.CommandAgumentParsers.Parser;
 import com.almightyalpaca.adbs4j.internal.CommandBuffer;
 
 import net.dv8tion.jda.entities.*;
@@ -15,7 +16,7 @@ public class JDAParsers {
 		}
 
 		@Override
-		public Channel get(final Message msg, final CommandBuffer buffer) {
+		public Channel get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			Channel channel;
 			final String arg = buffer.removeNext();
 			if (arg.equalsIgnoreCase("this")) {
@@ -40,7 +41,7 @@ public class JDAParsers {
 		}
 
 		@Override
-		public Guild get(final Message msg, final CommandBuffer buffer) {
+		public Guild get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			Guild guild;
 			final String arg = buffer.removeNext();
 			if (arg.equalsIgnoreCase("this") || arg.equalsIgnoreCase("guild") || arg.equalsIgnoreCase("server")) {
@@ -62,7 +63,7 @@ public class JDAParsers {
 		}
 
 		@Override
-		public TextChannel get(final Message msg, final CommandBuffer buffer) {
+		public TextChannel get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			TextChannel channel;
 			final String arg = buffer.removeNext();
 			if (arg.equalsIgnoreCase("this") || arg.equalsIgnoreCase("channel")) {
@@ -84,7 +85,7 @@ public class JDAParsers {
 		}
 
 		@Override
-		public User get(final Message msg, final CommandBuffer buffer) {
+		public User get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			User user;
 			final String arg = buffer.removeNext();
 			if (arg.equalsIgnoreCase("me")) {
@@ -132,7 +133,7 @@ public class JDAParsers {
 		}
 
 		@Override
-		public VoiceChannel get(final Message msg, final CommandBuffer buffer) {
+		public VoiceChannel get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			VoiceChannel channel;
 			final String arg = buffer.removeNext();
 

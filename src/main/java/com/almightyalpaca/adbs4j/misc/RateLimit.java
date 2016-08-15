@@ -34,5 +34,4 @@ public class RateLimit {
 			return l > System.currentTimeMillis() - this.period;
 		}
 	}
-
 }

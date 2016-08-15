@@ -1,9 +1,9 @@
-package com.almightyalpaca.adbs4j.command.arguments.parsers;
+package com.almightyalpaca.adbs4j.command.arguments;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.almightyalpaca.adbs4j.command.arguments.ParseException;
 import com.almightyalpaca.adbs4j.internal.CommandBuffer;
 
 import net.dv8tion.jda.entities.Message;
@@ -18,7 +18,7 @@ public class CommandAgumentParsers {
 			this.parserClass = parserClass;
 		}
 
-		public abstract T get(Message msg, CommandBuffer buffer) throws ParseException;
+		public abstract T get(Message msg, CommandBuffer buffer, Annotation[] annotations) throws ParseException;
 
 		public final Class<? extends T> getParserClass() {
 			return this.parserClass;

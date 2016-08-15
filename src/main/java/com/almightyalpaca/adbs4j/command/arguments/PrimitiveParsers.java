@@ -1,9 +1,10 @@
-package com.almightyalpaca.adbs4j.command.arguments.parsers;
+package com.almightyalpaca.adbs4j.command.arguments;
+
+import java.lang.annotation.Annotation;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.almightyalpaca.adbs4j.command.arguments.ParseException;
-import com.almightyalpaca.adbs4j.command.arguments.parsers.CommandAgumentParsers.Parser;
+import com.almightyalpaca.adbs4j.command.arguments.CommandAgumentParsers.Parser;
 import com.almightyalpaca.adbs4j.internal.CommandBuffer;
 import com.almightyalpaca.adbs4j.util.StringUtil;
 
@@ -16,7 +17,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Boolean get(final Message msg, final CommandBuffer buffer) {
+		public Boolean get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Boolean.parseBoolean(buffer.removeNext());
 		}
 
@@ -28,7 +29,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Byte get(final Message msg, final CommandBuffer buffer) {
+		public Byte get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Byte.parseByte(buffer.removeNext());
 		}
 
@@ -40,7 +41,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Character get(final Message msg, final CommandBuffer buffer) {
+		public Character get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			if (buffer.getNext().length() != 1) {
 				throw new ParseException("Invalid char!");
 			}
@@ -55,7 +56,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Double get(final Message msg, final CommandBuffer buffer) {
+		public Double get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Double.parseDouble(buffer.removeNext());
 		}
 
@@ -67,7 +68,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Float get(final Message msg, final CommandBuffer buffer) {
+		public Float get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Float.parseFloat(buffer.removeNext());
 		}
 	}
@@ -79,7 +80,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Integer get(final Message msg, final CommandBuffer buffer) {
+		public Integer get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Integer.parseInt(buffer.removeNext());
 		}
 
@@ -91,7 +92,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Long get(final Message msg, final CommandBuffer buffer) {
+		public Long get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Long.parseLong(buffer.removeNext());
 		}
 
@@ -103,7 +104,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Boolean get(final Message msg, final CommandBuffer buffer) {
+		public Boolean get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Boolean.parseBoolean(buffer.removeNext());
 		}
 
@@ -115,7 +116,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Byte get(final Message msg, final CommandBuffer buffer) {
+		public Byte get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Byte.parseByte(buffer.removeNext());
 		}
 
@@ -127,7 +128,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Character get(final Message msg, final CommandBuffer buffer) {
+		public Character get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			if (buffer.getNext().length() != 1) {
 				throw new ParseException("Invalid char!");
 			}
@@ -142,7 +143,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Double get(final Message msg, final CommandBuffer buffer) {
+		public Double get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Double.parseDouble(buffer.removeNext());
 		}
 
@@ -154,7 +155,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Float get(final Message msg, final CommandBuffer buffer) {
+		public Float get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Float.parseFloat(buffer.removeNext());
 		}
 
@@ -167,7 +168,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Integer get(final Message msg, final CommandBuffer buffer) {
+		public Integer get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Integer.parseInt(buffer.removeNext());
 		}
 
@@ -179,7 +180,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Long get(final Message msg, final CommandBuffer buffer) {
+		public Long get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Long.parseLong(buffer.removeNext());
 		}
 
@@ -191,7 +192,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Short get(final Message msg, final CommandBuffer buffer) {
+		public Short get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Short.parseShort(buffer.removeNext());
 		}
 
@@ -203,7 +204,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public Short get(final Message msg, final CommandBuffer buffer) {
+		public Short get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return Short.parseShort(buffer.removeNext());
 		}
 
@@ -215,7 +216,7 @@ public class PrimitiveParsers {
 		}
 
 		@Override
-		public String get(final Message msg, final CommandBuffer buffer) {
+		public String get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			String string = buffer.removeNext();
 			if (string.startsWith("\"")) {
 				do {

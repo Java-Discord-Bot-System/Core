@@ -2,7 +2,7 @@ package com.almightyalpaca.adbs4j.events.commands;
 
 import com.almightyalpaca.adbs4j.command.Command;
 import com.almightyalpaca.adbs4j.command.CommandInfo;
-import com.almightyalpaca.adbs4j.events.AsyncPluginEvent;
+import com.almightyalpaca.adbs4j.events.PluginEvent;
 import com.almightyalpaca.adbs4j.internal.extension.ExtensionManager;
 import com.almightyalpaca.adbs4j.internal.extension.ExtensionUtil;
 import com.almightyalpaca.adbs4j.plugins.Plugin;
@@ -10,7 +10,7 @@ import com.almightyalpaca.adbs4j.plugins.Plugin;
 import net.dv8tion.jda.entities.*;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
 
-public final class CommandExecutionEvent extends AsyncPluginEvent {
+public final class CommandExecutionEvent extends PluginEvent {
 
 	private boolean						cancelled	= false;
 

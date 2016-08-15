@@ -35,24 +35,24 @@ public abstract class BotPermission {
 
 	}
 
-	public static BotPermission	IN_VOICE_CHANNEL	= new BotPermission() {
-														@Override
-														public boolean isSatisfied(final BotPermissionManager manager, final MessageChannel channel, final User user) {
-															if (channel instanceof Channel) {
-																final Channel guildChannel = (Channel) channel;
-																final Guild guild = guildChannel.getGuild();
-																return guild.getVoiceStatusOfUser(user).getChannel() != null;
-															}
-															return false;
-														}
-													};
+	public static final BotPermission	IN_VOICE_CHANNEL	= new BotPermission() {
+																@Override
+																public boolean isSatisfied(final BotPermissionManager manager, final MessageChannel channel, final User user) {
+																	if (channel instanceof Channel) {
+																		final Channel guildChannel = (Channel) channel;
+																		final Guild guild = guildChannel.getGuild();
+																		return guild.getVoiceStatusOfUser(user).getChannel() != null;
+																	}
+																	return false;
+																}
+															};
 
-	public static BotPermission	BOT_ADMIN			= new BotPermission() {
-														@Override
-														public boolean isSatisfied(final BotPermissionManager manager, final MessageChannel channel, final User user) {
-															return manager.isAdmin(user.getId());
-														}
-													};
+	public static final BotPermission	BOT_ADMIN			= new BotPermission() {
+																@Override
+																public boolean isSatisfied(final BotPermissionManager manager, final MessageChannel channel, final User user) {
+																	return manager.isAdmin(user.getId());
+																}
+															};
 
 	public static BotPermission hasDiscordPerms(final Permission... perms) {
 		return new DiscordBotPermission(perms);

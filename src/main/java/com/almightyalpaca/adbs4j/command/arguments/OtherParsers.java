@@ -1,12 +1,12 @@
-package com.almightyalpaca.adbs4j.command.arguments.parsers;
+package com.almightyalpaca.adbs4j.command.arguments;
 
+import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.almightyalpaca.adbs4j.command.arguments.ParseException;
-import com.almightyalpaca.adbs4j.command.arguments.parsers.CommandAgumentParsers.Parser;
+import com.almightyalpaca.adbs4j.command.arguments.CommandAgumentParsers.Parser;
 import com.almightyalpaca.adbs4j.internal.CommandBuffer;
 
 import net.dv8tion.jda.entities.Message;
@@ -19,7 +19,7 @@ public class OtherParsers {
 		}
 
 		@Override
-		public BigDecimal get(final Message msg, final CommandBuffer buffer) {
+		public BigDecimal get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return new BigDecimal(buffer.removeNext());
 		}
 
@@ -31,21 +31,21 @@ public class OtherParsers {
 		}
 
 		@Override
-		public BigInteger get(final Message msg, final CommandBuffer buffer) {
+		public BigInteger get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
 			return new BigInteger(buffer.removeNext());
 		}
 
 	}
 
-	public static class RestParser extends Parser<Rest> {
+	public static class TextParser extends Parser<Text> {
 
-		public RestParser() {
-			super(Rest.class);
+		public TextParser() {
+			super(Text.class);
 		}
 
 		@Override
-		public Rest get(final Message msg, final CommandBuffer buffer) {
-			return new Rest(buffer.remove(buffer.lenght()));
+		public Text get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
+			return new Text(buffer.remove(buffer.lenght()));
 		}
 	}
 
@@ -55,7 +55,7 @@ public class OtherParsers {
 		}
 
 		@Override
-		public URL get(final Message msg, final CommandBuffer buffer) throws ParseException {
+		public URL get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) throws ParseException {
 			try {
 				return new URL(buffer.removeNext());
 			} catch (final MalformedURLException e) {
@@ -69,7 +69,7 @@ public class OtherParsers {
 		CommandAgumentParsers.addParser(new OtherParsers.BigDecimalParser());
 		CommandAgumentParsers.addParser(new OtherParsers.BigIntegerParser());
 		CommandAgumentParsers.addParser(new OtherParsers.URLParser());
-		CommandAgumentParsers.addParser(new RestParser());
+		CommandAgumentParsers.addParser(new TextParser());
 
 	}
 
