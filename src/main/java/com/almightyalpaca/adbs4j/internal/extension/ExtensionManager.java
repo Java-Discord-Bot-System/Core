@@ -219,11 +219,11 @@ public class ExtensionManager {
 				if (ExtensionManager.this.commandManager != null) {
 					ExtensionManager.this.commandManager.shutdown();
 				}
-				if (ExtensionManager.this.eventManager != null) {
-					ExtensionManager.this.eventManager.shutdown();
-				}
 				if (ExtensionManager.this.api != null) {
 					ExtensionManager.this.api.shutdown();
+				}
+				if (ExtensionManager.this.eventManager != null) {
+					ExtensionManager.this.eventManager.shutdown();
 				}
 				if (ExtensionManager.this.storageProvider != null) {
 					ExtensionManager.this.storageProvider.shutdown();
@@ -233,7 +233,6 @@ public class ExtensionManager {
 
 				for (final Thread thread : Thread.getAllStackTraces().keySet()) {
 					if (!thread.isDaemon() && thread != Thread.currentThread() && !thread.getName().equals("DestroyJavaVM")) {
-						System.out.println(thread.getName() + "    " + thread.isDaemon());
 						final long joinTime = time + 10000 - System.currentTimeMillis();
 						if (joinTime > 0) {
 							try {
