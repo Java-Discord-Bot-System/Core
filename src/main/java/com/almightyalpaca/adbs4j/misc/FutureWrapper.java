@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 
 public abstract class FutureWrapper<V, O> implements Future<V> {
 
@@ -13,11 +14,11 @@ public abstract class FutureWrapper<V, O> implements Future<V> {
 		this.future = future;
 	}
 
-	public static <V, O> Future<V> wrap(final Future<O> f, final Transformer<V, O> t) {
+	public static <V, O> Future<V> wrap(final Future<O> f, final Function<O, V> t) {
 		return new FutureWrapper<V, O>(f) {
 			@Override
 			protected V transform(final O o) {
-				return t.tramsform(o);
+				return t.apply(o);
 			}
 		};
 	}
