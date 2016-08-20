@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import com.almightyalpaca.adbs4j.internal.BotPermissionManager;
+import com.almightyalpaca.adbs4j.internal.CommandExecutionManager;
 import com.almightyalpaca.adbs4j.misc.RateLimit;
 
 import net.dv8tion.jda.entities.Channel;
@@ -25,14 +25,14 @@ public abstract class BotRateLimit {
 		}
 
 		@Override
-		public void action(final BotPermissionManager manager, final MessageChannel channel, final User user) {
+		public void action(final CommandExecutionManager manager, final MessageChannel channel, final User user) {
 			if (!(this.ignoreAdmins && manager.isAdmin(user.getId()))) {
 				this.rateLimit.action();
 			}
 		}
 
 		@Override
-		public boolean isLimited(final BotPermissionManager manager, final MessageChannel channel, final User user) {
+		public boolean isLimited(final CommandExecutionManager manager, final MessageChannel channel, final User user) {
 			if (this.ignoreAdmins && manager.isAdmin(user.getId())) {
 				return true;
 			} else {
@@ -60,7 +60,7 @@ public abstract class BotRateLimit {
 		}
 
 		@Override
-		public void action(final BotPermissionManager manager, final MessageChannel channel, final User user) {
+		public void action(final CommandExecutionManager manager, final MessageChannel channel, final User user) {
 			if (!(this.ignoreAdmins && manager.isAdmin(user.getId()))) {
 				if (channel instanceof Channel) {
 					this.getRateLimit(((Channel) channel).getGuild().getId()).action();
@@ -78,7 +78,7 @@ public abstract class BotRateLimit {
 		}
 
 		@Override
-		public boolean isLimited(final BotPermissionManager manager, final MessageChannel channel, final User user) {
+		public boolean isLimited(final CommandExecutionManager manager, final MessageChannel channel, final User user) {
 			if (this.ignoreAdmins && manager.isAdmin(user.getId())) {
 				return true;
 			} else {
@@ -110,7 +110,7 @@ public abstract class BotRateLimit {
 		}
 
 		@Override
-		public void action(final BotPermissionManager manager, final MessageChannel channel, final User user) {
+		public void action(final CommandExecutionManager manager, final MessageChannel channel, final User user) {
 			if (!(this.ignoreAdmins && manager.isAdmin(user.getId()))) {
 				this.getRateLimit(user.getId()).action();
 			}
@@ -127,7 +127,7 @@ public abstract class BotRateLimit {
 		}
 
 		@Override
-		public boolean isLimited(final BotPermissionManager manager, final MessageChannel channel, final User user) {
+		public boolean isLimited(final CommandExecutionManager manager, final MessageChannel channel, final User user) {
 			if (this.ignoreAdmins && manager.isAdmin(user.getId())) {
 				return true;
 			} else {
@@ -148,7 +148,7 @@ public abstract class BotRateLimit {
 		return new PerUserRateLimit(times, period, unit, ignoreAdmins);
 	}
 
-	public abstract void action(BotPermissionManager manager, MessageChannel channel, User user);
+	public abstract void action(CommandExecutionManager manager, MessageChannel channel, User user);
 
-	public abstract boolean isLimited(BotPermissionManager manager, MessageChannel channel, User user);
+	public abstract boolean isLimited(CommandExecutionManager manager, MessageChannel channel, User user);
 }

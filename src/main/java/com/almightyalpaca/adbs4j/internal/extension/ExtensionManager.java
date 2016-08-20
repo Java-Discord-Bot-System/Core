@@ -25,7 +25,7 @@ import com.almightyalpaca.adbs4j.events.manager.EventManager;
 import com.almightyalpaca.adbs4j.events.plugins.PluginLoadedEvent;
 import com.almightyalpaca.adbs4j.events.plugins.PluginUnloadedEvent;
 import com.almightyalpaca.adbs4j.exception.PluginException;
-import com.almightyalpaca.adbs4j.internal.BotPermissionManager;
+import com.almightyalpaca.adbs4j.internal.CommandExecutionManager;
 import com.almightyalpaca.adbs4j.plugins.Plugin;
 import com.almightyalpaca.adbs4j.plugins.PluginInfo;
 import com.almightyalpaca.adbs4j.storage.StorageProviderInstance;
@@ -51,7 +51,7 @@ public class ExtensionManager {
 
 	final RedisStorageProvider		storageProvider;
 
-	final BotPermissionManager		botPermissionManager;
+	final CommandExecutionManager	commandExecutionManager;
 
 	private final ExitCode			previousExitCode;
 
@@ -124,7 +124,7 @@ public class ExtensionManager {
 			}
 			this.api = builder.buildBlocking();
 
-			this.botPermissionManager = new BotPermissionManager(this);
+			this.commandExecutionManager = new CommandExecutionManager(this);
 
 			this.loadPlugins();
 
@@ -170,8 +170,8 @@ public class ExtensionManager {
 		return this.previousExitCode;
 	}
 
-	public BotPermissionManager getRequirmentManager() {
-		return this.botPermissionManager;
+	public CommandExecutionManager getRequirmentManager() {
+		return this.commandExecutionManager;
 	}
 
 	public final File getRootDir() {

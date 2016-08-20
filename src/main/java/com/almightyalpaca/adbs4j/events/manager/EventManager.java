@@ -22,6 +22,8 @@ public class EventManager extends EventManagerExtension implements IEventManager
 														final Thread thread = new Thread(r, "EventExecution-Thread");
 														thread.setPriority(Thread.NORM_PRIORITY + 1);
 														return thread;
+													}, (r, e) -> {
+														r.run();
 													});
 
 	public EventManager(final ExtensionManager extensionManager) {
