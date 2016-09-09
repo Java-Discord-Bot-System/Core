@@ -157,7 +157,7 @@ artifacts {
 }
 
 task wrapper(type: Wrapper) { // This task is to specify the gradle version
-	gradleVersion = '3.0-milestone-2'
+	gradleVersion = '3.0'
 }
 
 task checksums {

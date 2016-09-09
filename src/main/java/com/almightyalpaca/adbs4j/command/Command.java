@@ -13,26 +13,18 @@ import net.dv8tion.jda.entities.User;
 public abstract class Command {
 
 	private final CommandInfo				info;
-	private final Set<ExecutionRequirement>	permissions;
+	private final Set<ExecutionRequirement>	requirements;
 	private final Set<BotRateLimit>			rateLimits;
 
 	public Command(final CommandInfo info, final ExecutionRequirement... perms) {
 		this.info = info;
-		this.permissions = Sets.newConcurrentHashSet();
+		this.requirements = Sets.newConcurrentHashSet();
 		this.rateLimits = Sets.newConcurrentHashSet();
-		this.addPermissions(perms);
+		this.addRequirements(perms);
 	}
 
 	public Command(final String name, final String category, final String syntax, final String help, final ExecutionRequirement... perms) {
 		this(new CommandInfo(name, category, syntax, help), perms);
-	}
-
-	protected void addPermissions(final ExecutionRequirement... perms) {
-		if (perms != null && perms.length > 0) {
-			for (final ExecutionRequirement perm : perms) {
-				this.permissions.add(perm);
-			}
-		}
 	}
 
 	protected void addRateLimit(final BotRateLimit... rateLimits) {
@@ -43,9 +35,17 @@ public abstract class Command {
 		}
 	}
 
+	protected void addRequirements(final ExecutionRequirement... requirements) {
+		if (requirements != null && requirements.length > 0) {
+			for (final ExecutionRequirement req : requirements) {
+				this.requirements.add(req);
+			}
+		}
+	}
+
 	public final boolean canExecute(final CommandExecutionManager manager, final MessageChannel channel, final User user) {
-		for (final ExecutionRequirement permission : this.permissions) {
-			if (!permission.isSatisfied(manager, channel, user)) {
+		for (final ExecutionRequirement requirement : this.requirements) {
+			if (!requirement.isSatisfied(manager, channel, user)) {
 				return false;
 			}
 		}

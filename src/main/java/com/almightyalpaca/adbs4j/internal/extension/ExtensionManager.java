@@ -197,6 +197,7 @@ public class ExtensionManager {
 				new PluginLoadedEvent(this, extension.getPluginInfo()).fire();
 			} else {
 				GCUtil.runFor(5);
+				// TODO PluginFailedToLoadEvent
 			}
 		} catch (IOException | PluginException e) {
 			if (extension != null) {
@@ -207,7 +208,7 @@ public class ExtensionManager {
 	}
 
 	public void loadPlugins() {
-		Arrays.stream(this.pluginDir.listFiles()).map(f -> f.isDirectory() ? f.getName() : FilenameUtils.getBaseName(f.getName())).distinct().forEach(s -> this.loadPlugin(s));
+		Arrays.stream(this.pluginDir.listFiles()).map(f -> f.isDirectory() ? f.getName() : FilenameUtils.getBaseName(f.getName())).distinct().forEach(this::loadPlugin);
 	}
 
 	public void shutdown(final ExitCode code) {
