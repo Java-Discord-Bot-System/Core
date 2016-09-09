@@ -282,7 +282,7 @@ public class AdvancedMessageBuilder extends MessageBuilder {
 	 * @return this instance
 	 */
 	public AdvancedMessageBuilder ensureNewLine() {
-		if (this.builder.length() == 0 || this.builder.charAt(this.builder.length()) == '\n') {
+		if (this.builder.length() == 0 || this.builder.charAt(this.builder.length() - 1) == '\n') {
 			return this;
 		}
 		return this.newLine();
