@@ -217,14 +217,7 @@ public class PrimitiveParsers {
 
 		@Override
 		public String get(final Message msg, final CommandBuffer buffer, final Annotation[] annotations) {
-			String string = buffer.removeNext();
-			if (string.startsWith("\"")) {
-				do {
-					string += buffer.removeNext();
-				} while (!string.endsWith("\"") || buffer.isEmpty());
-				string = StringUtil.replaceLast(StringUtils.replaceOnce(string, "\"", ""), "\"", "");
-			}
-			return string;
+			return buffer.removeNext();
 		}
 
 	}
