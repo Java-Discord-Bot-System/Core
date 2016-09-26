@@ -62,7 +62,7 @@ repositories {
 dependencies {
 	
 	// JDA
-	compile(group: 'net.dv8tion', name: 'JDA', version: '2.2.1_358') {
+	compile(group: 'net.dv8tion', name: 'JDA', version: '2.2.1_368') {
 		// I don't want all the audio libs currectly. They are just a waste of space.
 		// This breaks URLPlayer and FilePlayer but JDA-Player will still work.
 		exclude group: 'junit', module: 'junit'
@@ -157,7 +157,7 @@ artifacts {
 }
 
 task wrapper(type: Wrapper) { // This task is to specify the gradle version
-	gradleVersion = '3.0'
+	gradleVersion = '3.1'
 }
 
 task checksums {

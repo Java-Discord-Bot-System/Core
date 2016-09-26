@@ -49,11 +49,22 @@ public class Launcher {
 
 		final StringBuilder sBuilder = new StringBuilder();
 
+		char seperator;
+		String osname = System.getProperty("os.name");
+		if (osname == null) {
+			dependenciesReader.close();
+			throw new Error("Cannot determine operation system! Property 'os.name' is null!");
+		} else if (osname.toLowerCase().startsWith("linux")) {
+			seperator = ':';
+		} else {
+			seperator = ';';
+		}
+
 		while ((line = dependenciesReader.readLine()) != null) {
 			if (!line.isEmpty()) {
 				final Dependency d = Dependency.ofId(line);
 				final File dependencyFile = new File(this.bootstrap.getWorkingDirectory(), "libs/" + d.getAsPath());
-				sBuilder.append(dependencyFile.getAbsolutePath()).append(';');
+				sBuilder.append(dependencyFile.getAbsolutePath()).append(seperator);
 			}
 		}
 		sBuilder.deleteCharAt(sBuilder.length() - 1);
